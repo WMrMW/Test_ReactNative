@@ -1,12 +1,13 @@
 import React from "react"
 import { View,Text} from "react-native"
+import styles from "./style";
 
 
 export default function ResultImc (props){
     return (
-        <View>
-            <Text>{props.messageResultImc}</Text>
-            <Text>{props.ResultImc}</Text>
+        <View style={styles.resultIMC}>
+            <Text style={styles.information}>{props.messageResultImc}</Text>
+            <Text style={styles.numberIMC}>{props.ResultImc}</Text>
         </View>
     );
 }
