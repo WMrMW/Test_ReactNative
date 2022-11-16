@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+/*import { StyleSheet, View } from 'react-native';
 import Title from './src/components/title/';
 import Form from './src/components/form';
 
@@ -18,3 +18,23 @@ const styles = StyleSheet.create({
     paddingTop: 80,
   },
 });
+*/
+
+import React from 'react';
+import { StatusBar } from 'react-native';
+
+
+import { NavigationContainer } from '@react-navigation/native'
+import Routes from './src/components/routes/index';
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <StatusBar backgroundColor='#38A69D' barStyle="light-content"/>
+      <Routes/>
+    </NavigationContainer>
+  );
+}
+
+
+

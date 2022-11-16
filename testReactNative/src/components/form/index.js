@@ -1,3 +1,4 @@
+/*
 import React, { useState } from "react"
 import { Text, TextInput, View, TouchableOpacity } from "react-native"
 import ResultImc from "./resultImc/";
@@ -61,4 +62,4 @@ export default function Form() {
             <ResultImc messageResultImc={messageImc} ResultImc={imc} />
         </View >
     );
-}
+}*/
