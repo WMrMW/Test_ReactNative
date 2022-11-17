@@ -35,7 +35,10 @@ export default function Login() {
         <Text style={styles.buttonText}>Acessar</Text>
       </TouchableOpacity>
 
-     <TouchableOpacity style={styles.buttonregister}>
+     <TouchableOpacity 
+     style={styles.buttonregister}
+     onPress={ () => navigationimc.navigate('Cadastro')}
+     >
         <Text style={styles.registerText}>Não possui uma conta ? Cadastre-se</Text>
      </TouchableOpacity>
 
