@@ -1,15 +1,18 @@
-
+import { useNavigation } from '@react-navigation/native'
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function Welcome() {
+
+ const navigation = useNavigation();
+
   return(
     <View style={styles.container}>
     
 
       <TouchableOpacity 
-         style = {styles.containerbuttontext}
-         onPress={ () => navigation.navigate('Login')}
+        style = {styles.containerbuttontext}
+        onPress={ () => navigation.navigate('Login')}
       >
         <Text style = {styles.buttonText}> Acessar </Text>
       </TouchableOpacity>
