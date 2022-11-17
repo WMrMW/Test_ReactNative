@@ -1,6 +1,5 @@
 import React, { useState } from "react"
-import { Text, TextInput, View, TouchableOpacity } from "react-native"
-import styles from "./style";
+import { Text, TextInput, View, StyleSheet, TouchableOpacity } from "react-native"
 
 
 function ResultImc (props){
@@ -12,16 +11,7 @@ function ResultImc (props){
     );
 }
 
-export default function Title(){
-    return (
-        <View style={styles.boxTitle}>
-            <Text style={styles.textTitle}>Calculadora de IMC</Text>
-        </View>
-    );
-}
-
-
-export default function Form() {
+export default function Form(){
 
     const [altura, setAltura] = useState(null);
     const [peso, setPeso] = useState(null);
@@ -49,7 +39,12 @@ export default function Form() {
     }
 
     return (
+        
+        
         <View style={styles.formContext}>
+            <View style={styles.boxTitle}>
+               <Text style={styles.textTitle}>Calculadora de IMC</Text>
+            </View>
             <View style={styles.form}>
                 <Text style={styles.lableText}>Altura</Text>
                 <TextInput

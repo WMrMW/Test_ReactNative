@@ -8,7 +8,6 @@ export default function Welcome() {
 
   return(
     <View style={styles.container}>
-    
 
       <TouchableOpacity 
         style = {styles.containerbuttontext}
@@ -41,6 +40,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
- 
 
 })
