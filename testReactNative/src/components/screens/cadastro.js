@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { StatusBar } from "react-native";
-import { Text, TextInput, View, StyleSheet, TouchableOpacity } from "react-native" 
+import { Text, TextInput, View, StyleSheet, Image, TouchableOpacity } from "react-native" 
 import { useNavigation } from '@react-navigation/native'
 
 
@@ -16,8 +16,7 @@ export default function Cadastro(){
    return (
     <View  styles = {styles.container}>
 
-        
-        <Image style={{width:300,height:200} }/>
+        <Text style= {styles.textBemVindo}>Por favor digite os campos solicitados abaixo e realize seu cadastro!</Text>
         <TextInput placeholder="Digite seu nome" style={styles.textInput} onChangeText={text=>setNome(text)}/>
         <TextInput placeholder="Digite seu email" style={styles.textInput} onChangeText={text=>setEmail(text)}/>
         <TextInput secureTextEntry ={true} placeholder="Digite sua senha" style={styles.textInput} onChangeText={text=>setSenha(text)}/>
@@ -38,6 +37,15 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       padding: 20,
+    },
+    textBemVindo:{
+       fontSize: 28,
+       fontWeight: 'bold',
+       color: 'black',
+       alignItems: 'center',
+       justifyContent: 'center',
+       padding: 20,
+       paddingTop:35,
     },
     textInput:{
         width: '100%',
