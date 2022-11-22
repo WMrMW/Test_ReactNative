@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 import { StatusBar } from "react-native";
-import { Text, TextInput, View, StyleSheet, Image, TouchableOpacity } from "react-native" 
-import { useNavigation } from '@react-navigation/native'
+import { Text, TextInput, View, StyleSheet, Image, TouchableOpacity } from "react-native" ;
+import { useNavigation } from '@react-navigation/native';
 
 
 
@@ -26,8 +26,6 @@ export default function Cadastro(){
         </TouchableOpacity>
     </View>
    )
-
-
 }
 
 const styles = StyleSheet.create({
