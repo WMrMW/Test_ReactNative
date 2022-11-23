@@ -81,11 +81,12 @@ const styles = StyleSheet.create({
     boxTitle: {
         alignItems: "center",
         justifyContent: "center",
-        padding: 15,
+        paddingBottom: 15,
     },
     textTitle: {
         color: "#1b065e",
         fontSize: 24,
+        padding:15,
         fontWeight: "bold",
     },
     //style do form
@@ -94,10 +95,7 @@ const styles = StyleSheet.create({
         height: "100%",
         bottom: 0,
         alignItems: "center",
-        marginTop: 30,
-        backgroundColor: "#d6faff",
-        borderTopRightRadius: 30,
-        borderTopLeftRadius: 30,
+        backgroundColor: '#8bfaff',
     },
     form: {
         width: "100%",
@@ -121,14 +119,15 @@ const styles = StyleSheet.create({
     },
     textButtonCalcu: {
         fontSize: 20,
-        fontWeight:"bold"
+        fontWeight:"bold",
+        color:'#fff'
     },
     buttonCalcu: {
         borderRadius:50,
         alignItems:"center",
         justifyContent:"center",
         width:"90%",
-        backgroundColor:'#8bfaff',
+        backgroundColor: '#1b065e',
         paddingTop:14,
         paddingBottom: 14,
         marginLeft:12,

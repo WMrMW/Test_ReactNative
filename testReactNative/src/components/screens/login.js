@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   message:{
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#FFF',
+    color: "#1b065e",
   },
   containerForm:{
     backgroundColor: '#FFF',
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button:{
-    backgroundColor: 'green',
+    backgroundColor: '#1b065e',
     width: '100%',
     borderRadius: 4,
     paddingVertical: 8,
