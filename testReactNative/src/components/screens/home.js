@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native'
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 
-export default function Welcome() {
+export default function Home() {
 
   const navigation = useNavigation();
 
@@ -12,16 +13,22 @@ export default function Welcome() {
       <Text style={{ fontSize: 35, fontWeight: 'bold', color: '#1b065e' }}>
         Seja Bem Vindo!
       </Text>
-      <Text style={{ fontSize: 35, fontWeight: 'bold', color: '#1b065e' }}>
-        Clique em Acessar para continuar
-      </Text>
-
-      <TouchableOpacity
-        style={styles.containerbuttontext}
-        onPress={() => navigation.navigate('Login')}
-      >
-        <Text style={styles.buttonText}> Acessar </Text>
-      </TouchableOpacity>
+      <View style={{ marginTop: 120, paddingTop: 100 }}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [
+                  { name: 'Login' },
+                ],
+              }));
+          }}
+        >
+          <Text style={styles.buttonText}>Sair</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -33,20 +40,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  containerbuttontext: {
-    position: 'absolute',
+  button: {
     backgroundColor: '#1b065e',
-    borderRadius: 50,
+    width: 100,
+    borderRadius: 4,
     paddingVertical: 8,
-    width: 120,
-    bottom: '15%',
+    marginTop: 14,
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center'
   },
   buttonText: {
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
   },
-
 })

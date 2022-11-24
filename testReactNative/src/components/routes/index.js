@@ -1,36 +1,42 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Welcome from '../screens/home';
-import Login from '../screens/login';
-import Form from '../screens/calculatorIMC'
 import Cadastro from '../screens/cadastro';
+import Login from '../screens/login';
+import MyTabs from '../screens/principal';
 
 
 const Stack = createNativeStackNavigator();
 
+export default function Routes() {
+    return (
+        <Stack.Navigator>
 
-export default function Routes(){
-    return(
-      <Stack.Navigator>
-
-          <Stack.Screen
-              name = "Welcome"
-              component={Welcome}
-          />
             <Stack.Screen
-                name = "Login"
+                name="Login"
                 component={Login}
+                options={{
+                    title: '',
+                    headerTransparent: true,
+                    headerShown: false
+                }}
             />
-         
             <Stack.Screen
-                name = "Form"
-                component={Form}
-            />
-
-            <Stack.Screen
-                name = "Cadastro"
+                name="Cadastro"
                 component={Cadastro}
+                options={{
+                    title: '',
+                    headerTransparent: true,
+                    headerShown: false
+                }}
             />
-      </Stack.Navigator>
-        
+            <Stack.Screen
+                name="Principal"
+                component={MyTabs}
+                options={{
+                    title: '',
+                    headerTransparent: true,
+                    headerShown: false
+                }}
+            />
+        </Stack.Navigator>
     )
 }

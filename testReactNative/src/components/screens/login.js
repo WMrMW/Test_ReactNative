@@ -1,49 +1,54 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native';
+import MyTabs from "./principal";
 
 
 import * as Animatable from 'react-native-animatable';
 
-export default function Login() {
+export default function Login({ navigation }) {
 
   const navigationimc = useNavigation();
 
   return (
     <View style={styles.container}>
-     <Animatable.View animation="fadeInLeft" delay = {500} style={styles.containerHeader}>
-      <Text style={styles.message}>Bem-vindo(a)</Text>
-     </Animatable.View> 
+      <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
+        <Text style={styles.message}>Bem-vindo(a)</Text>
+      </Animatable.View>
 
-     <Animatable.View animation="fadeInLeft" delay = {500} style={styles.containerForm}>
-      <Text style={styles.title}>Email</Text>
-      <TextInput
-        placeholder ="Digite seu email"
-        style ={styles.input}
-      />
+      <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerForm}>
+        <Text style={styles.title}>Email</Text>
+        <TextInput
+          placeholder="Digite seu email"
+          style={styles.input}
+        />
 
-      <Text style={styles.title}>Senha</Text>
-      <TextInput
-        placeholder ="Digite sua senha"
-        style ={styles.input}
-      />
+        <Text style={styles.title}>Senha</Text>
+        <TextInput
+          placeholder="Digite sua senha"
+          style={styles.input}
+        />
 
-      <TouchableOpacity 
-      style={styles.button}
-      onPress={ () => navigationimc.navigate('Form')}
-      >
-        <Text style={styles.buttonText}>Acessar</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            navigation.reset({
+              routes: [{ name: "Principal" }]
+            })
+          }}
+        >
+          <Text style={styles.buttonText}>Acessar</Text>
+        </TouchableOpacity>
 
-     <TouchableOpacity 
-     style={styles.buttonregister}
-     onPress={ () => navigationimc.navigate('Cadastro')}
-     >
-        <Text style={styles.registerText}>Não possui uma conta ? Cadastre-se</Text>
-     </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonregister}
+          onPress={() => { navigation.navigate('Cadastro') }}
+        >
+          <Text style={styles.registerText}>Não possui uma conta ? Cadastre-se</Text>
+        </TouchableOpacity>
 
 
-     </Animatable.View> 
+      </Animatable.View>
     </View>
   );
 }
@@ -58,30 +63,30 @@ const styles = StyleSheet.create({
     marginBottom: '8%',
     paddingStart: '5%',
   },
-  message:{
+  message: {
     fontSize: 28,
     fontWeight: 'bold',
     color: "#1b065e",
   },
-  containerForm:{
+  containerForm: {
     backgroundColor: '#FFF',
     flex: 1,
-    borderTopLeftRadius:25,
-    borderTopRightRadius : 25,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
     paddingStart: '5%',
     paddingEnd: '5%',
   },
-  title:{
+  title: {
     fontSize: 20,
     marginTop: 28,
   },
-  input:{
+  input: {
     borderBottomWidth: 1,
     height: 40,
     marginBottom: 12,
     fontSize: 16,
   },
-  button:{
+  button: {
     backgroundColor: '#1b065e',
     width: '100%',
     borderRadius: 4,
@@ -90,16 +95,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  buttonText:{
+  buttonText: {
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  buttonregister:{
+  buttonregister: {
     marginTop: 14,
     alignSelf: 'center',
   },
-  registerText:{
+  registerText: {
     color: '#a1a1a1',
 
   }
