@@ -3,7 +3,7 @@ import { StatusBar } from "react-native";
 import { Text, TextInput, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
-
+import config from "../../../config/config.json"
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
@@ -15,9 +15,9 @@ import * as Animatable from 'react-native-animatable';
 export default function Cadastro() {
     
     const [nome, setNome] = useState('');
-    const [email, setEmail] = useState(null);
-    const [senha, setSenha] = useState(null);
-    const [dataNasc, setDataNasc] = useState(null);
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+    const [dataNasc, setDataNasc] = useState('');
 
     const navigationimc = useNavigation();
  
@@ -32,7 +32,20 @@ export default function Cadastro() {
         resolver: yupResolver(schema)
     });
 
-    function fnCadastrar(data){
+    async function fnCadastrar(){
+        const reqs = await fetch(config.urlRootNode+'create',{
+            method: 'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({
+                nomeUser: nome,
+                passwordUser: senha,
+                emailUser:email,
+                dataUser: dataNasc
+            })
+        })
     }
   
 
