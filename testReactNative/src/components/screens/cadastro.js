@@ -18,6 +18,7 @@ export default function Cadastro() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [dataNasc, setDataNasc] = useState('');
+    const [message, setmessageee] = useState('');
 
     const navigationimc = useNavigation();
  
@@ -33,10 +34,10 @@ export default function Cadastro() {
     });
 
     async function fnCadastrar(){
-        const reqs = await fetch(config.urlRootNode+'create',{
+        const reqs = await fetch('http://10.0.10.128:3000/',{
             method: 'POST',
             headers:{
-                'Accept': 'application/json',
+                Accept: 'application/json',
                 'Content-Type' : 'application/json'
             },
             body: JSON.stringify({
@@ -46,6 +47,9 @@ export default function Cadastro() {
                 dataUser: dataNasc
             })
         })
+        let ress = await reqs.json();
+        setmessageee(ress);
+       
     }
   
 
@@ -57,6 +61,9 @@ export default function Cadastro() {
                 </View>
 
                 <View style={styles.formArea}>
+                    {message && (
+                        <Text>{message}</Text>
+                    )}
                     <Text style={styles.textCamp}>Nome</Text>
                     <Controller
                         control={control}
@@ -66,7 +73,7 @@ export default function Cadastro() {
                             style={[styles.textInput,
                             {borderWidth: errors.name && 1,
                             borderColor: errors.name && '#ff375b'}]}
-                            onChangeText={onChange} 
+                            onChangeText={text=>setNome(text)} 
                             onBlur={onBlur}
                             value ={value}
                             placeholder= "Digite seu nome"
@@ -84,7 +91,7 @@ export default function Cadastro() {
                             style={[styles.textInput,
                             {borderWidth: errors.email && 1,
                             borderColor: errors.email && '#ff375b'}]}
-                            onChangeText={onChange}
+                            onChangeText={text=>setEmail(text)} 
                             onBlur={onBlur}
                             value ={value}
                             placeholder = "Digite seu email"
@@ -105,7 +112,7 @@ export default function Cadastro() {
                             {borderWidth: errors.dataNasc && 1,
                             borderColor: errors.dataNasc && '#ff375b'}]}
                             keyboardType = {"numeric"} 
-                            onChangeText={onChange} 
+                            onChangeText={text=>setDataNasc(text)}
                             onBlur={onBlur}
                             value ={value}
                             placeholder= "Digite sua data de nascimento"
@@ -125,7 +132,7 @@ export default function Cadastro() {
                             style={[styles.textInput,
                             {borderWidth: errors.senha && 1,
                             borderColor: errors.senha && '#ff375b'}]}
-                            onChangeText={onChange}
+                            onChangeText={text=>setSenha(text)}
                             onBlur={onBlur}
                             value ={value}
                             placeholder= "Digite sua senha"
@@ -137,7 +144,7 @@ export default function Cadastro() {
 
                 </View>
                 <View style={styles.btnArea}>
-                    <TouchableOpacity style={styles.btnCadastro} onPress={handleSubmit(fnCadastrar)}>
+                    <TouchableOpacity style={styles.btnCadastro} onPress={fnCadastrar}>
                         <Text style={styles.textbtncadastro}>Cadastrar</Text>
                     </TouchableOpacity>
                 </View>

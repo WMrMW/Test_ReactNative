@@ -3,7 +3,7 @@ const express=require('express');
 const bodyParser=require('body-parser');
 
 const cors=require('cors');
-const model=require('../testReactNative/models');
+const model=require('./models');
 
 let app=express();
 
@@ -12,8 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 
-
-app.post('/create',async(req,res)=>{
+app.post('/',async(req,res)=>{
     let reqs = await model.User.create({
         'name' : req.body.nomeUser,
         'password' : req.body.passwordUser,
@@ -22,8 +21,10 @@ app.post('/create',async(req,res)=>{
         'createdAt': new Date(),
         'updatedAt': new Date(),
     });
-  
-})
+    if(reqs){
+        res.send(JSON.stringify('Usuário cadastrado com sucesso!'))
+    }
+});
 
 let port =process.env.PORT || 3000;
 
