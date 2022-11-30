@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StatusBar } from "react-native";
-import { Text, TextInput, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Text, TextInput, View, StyleSheet, Image, KeyboardAvoidingView,Platform, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 import config from "../../../config/config.json"
@@ -54,7 +54,7 @@ export default function Cadastro() {
   
 
     return (
-        <View styles={styles.container}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} styles={styles.container}>
             <Animatable.View>
                 <View style={styles.titleArea}>
                     <Text style={styles.textBemVindo}>Crie seu cadastro!</Text>
@@ -150,7 +150,7 @@ export default function Cadastro() {
                 </View>
 
             </Animatable.View>
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 
