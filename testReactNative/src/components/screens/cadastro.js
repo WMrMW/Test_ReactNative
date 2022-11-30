@@ -34,7 +34,7 @@ export default function Cadastro() {
     });
 
     async function fnCadastrar(){
-        const reqs = await fetch('http://10.0.10.128:3000/',{
+        const reqs = await fetch('http://10.0.10.128:3000/cadastro',{
             method: 'POST',
             headers:{
                 Accept: 'application/json',
@@ -42,14 +42,13 @@ export default function Cadastro() {
             },
             body: JSON.stringify({
                 nomeUser: nome,
-                passwordUser: senha,
-                emailUser:email,
+                password: senha,
+                email:email,
                 dataUser: dataNasc
             })
         })
         let ress = await reqs.json();
-        setmessageee(ress);
-       
+        setmessageee(ress);  
     }
   
 
@@ -148,6 +147,11 @@ export default function Cadastro() {
                         <Text style={styles.textbtncadastro}>Cadastrar</Text>
                     </TouchableOpacity>
                 </View>
+                <View style={styles.btnArea}>
+                    <TouchableOpacity style={styles.btnvoltar}onPress={() => { navigation.navigate('login') }}>
+                        <Text style={styles.textbtncadastro}>Voltar</Text>
+                    </TouchableOpacity>
+                </View>
 
             </Animatable.View>
         </KeyboardAvoidingView>
@@ -197,6 +201,13 @@ const styles = StyleSheet.create({
         marginTop:15
     },
     btnCadastro: {
+        width: 120,
+        height: 40,
+        backgroundColor: '#1b065e',
+        borderRadius: 20,
+        justifyContent: 'center',
+    },
+    btnvoltar: {
         width: 120,
         height: 40,
         backgroundColor: '#1b065e',

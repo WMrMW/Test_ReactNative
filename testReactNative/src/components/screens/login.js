@@ -1,4 +1,4 @@
-import React from "react";
+import React , { useState }from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MyTabs from "./principal";
@@ -8,7 +8,24 @@ import * as Animatable from 'react-native-animatable';
 
 export default function Login({ navigation }) {
 
+  const [emailLogin, setEmailLogin] = useState('');
+  const [senhaLogin, setSenhaLogin] = useState('');
+
   const navigationimc = useNavigation();
+
+  async function fnLogin(){
+    const reqs = await fetch('http://10.0.10.128:3000/login',{
+        method: 'POST',
+        headers:{
+            Accept: 'application/json',
+            'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify({
+            email:emailLogin,
+            password: senhaLogin
+        })
+      })
+  }
 
   return (
     <View style={styles.container}>
@@ -19,23 +36,21 @@ export default function Login({ navigation }) {
       <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerForm}>
         <Text style={styles.title}>Email</Text>
         <TextInput
+          onChangeText={text=>setEmailLogin(text)}
           placeholder="Digite seu email"
           style={styles.input}
         />
 
         <Text style={styles.title}>Senha</Text>
         <TextInput
+          onChangeText={text=>setSenhaLogin(text)}
           placeholder="Digite sua senha"
           style={styles.input}
         />
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => {
-            navigation.reset({
-              routes: [{ name: "Principal" }]
-            })
-          }}
+          onPress={() => fnLogin()}
         >
           <Text style={styles.buttonText}>Acessar</Text>
         </TouchableOpacity>
