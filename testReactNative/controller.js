@@ -20,7 +20,7 @@ app.post('/cadastro',async(req,res)=>{
     let reqs = await model.User.create({
         'name' : req.body.nomeUser,
         'password' :req.body.password,
-        'email' : req.body.emailUser,
+        'email' : req.body.email,
         'data' : req.body.dataUser,
         'createdAt': new Date(),
         'updatedAt': new Date(),
