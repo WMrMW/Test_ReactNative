@@ -9,11 +9,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-
-      <Text style={{ fontSize: 35, fontWeight: 'bold', color: '#1b065e' }}>
-        Seja Bem Vindo!
-      </Text>
-      <View style={{ marginTop: 120, paddingTop: 100 }}>
+      <View style={styles.btnSairArea}>
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
@@ -29,6 +25,11 @@ export default function Home() {
           <Text style={styles.buttonText}>Sair</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.graficArea}>
+      </View>
+      <View style={styles.imcArea}>
+        
+      </View>
     </View>
   );
 }
@@ -37,8 +38,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#8bfaff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   button: {
     backgroundColor: '#1b065e',
@@ -53,5 +52,13 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  btnSairArea: {
+    padding: 10,
+    alignItems: 'flex-end',
+
+  },
+  graficArea: {
+    flex:1,
   },
 })

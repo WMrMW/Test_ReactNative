@@ -1,8 +1,7 @@
 import React, { useState } from "react"
-import { Text, TextInput, View, StyleSheet, TouchableOpacity } from "react-native"
+import { Text, TextInput, View, StyleSheet, TouchableOpacity, Keyboard } from "react-native"
 
-
-function ResultImc (props){
+function ResultImc(props) {
     return (
         <View style={styles.resultIMC}>
             <Text style={styles.information}>{props.messageResultImc}</Text>
@@ -11,66 +10,103 @@ function ResultImc (props){
     );
 }
 
-export default function Form(){
+export default function Form() {
 
-    const [altura, setAltura] = useState(null);
+    const [altura, setAltura] = useState(1.75);
+    const [newAltura, setNewAltura] = useState('');
     const [peso, setPeso] = useState(null);
-    const [messageImc, setMessageImc] = useState("Por favor preencha os campos de altura e peso!");
+    const [pesoInput, setPesoInput] = useState('');
+    const [message, setMessage] = useState('');
     const [imc, setImc] = useState(null);
-    const [textButton, setTextButton] = useState("Calcular");
+
 
     function imcCalculator() {
         return setImc((peso / (altura ** 2)).toFixed(2));
     }
 
-    function validatorImc() {
+    function validateEdit() {
 
-        if (altura != null && peso != null) {
-            imcCalculator();
-            setPeso(null);
-            setAltura(null);
-            setMessageImc("Seu IMC é : ");
-            setTextButton("Calcular Novamente");
-            return;
+        if (newAltura.length > 0) {
+            let aux = '';
+            for (let index = 0; index < newAltura.length; index++) {
+                if (newAltura[index] === ',') {
+                    aux += '.';
+                } else {
+                    aux += newAltura[index];
+                }
+            }
+            let n = Number(aux);
+            setAltura(n);
+            Keyboard.dismiss();
+        } else {
+            alert("Por favor preencha o campo corretamente!");
         }
-        setImc(null);
-        setTextButton("Calcular");
-        setMessageImc("Por favor preencha os campos de altura e peso!");
     }
 
+    function adicionaPeso() {
+
+        if (pesoInput.length > 0) {
+            let aux = '';
+            for (let index = 0; index < pesoInput.length; index++) {
+                if (pesoInput[index] === ',') {
+                    aux += '.';
+                } else {
+                    aux += pesoInput[index];
+                }
+            }
+            let n = Number(aux);
+            setPeso(n);
+            imcCalculator();
+            setMessage("Seu IMC é : ");
+        } else {
+            alert("Por favor preencha o campo corretamente!");
+        }
+    }
+
+
     return (
-        
-        
         <View style={styles.formContext}>
             <View style={styles.boxTitle}>
-               <Text style={styles.textTitle}>Calculadora de IMC</Text>
+                <Text style={styles.textTitle}>Dados</Text>
             </View>
             <View style={styles.form}>
-                <Text style={styles.lableText}>Altura</Text>
-                <TextInput
-                    style={styles.inputText}
-                    onChangeText={setAltura}
-                    value={altura}
-                    placeholder="Ex: 1.75"
-                    keyboardType="numeric"
-                />
+                <View>
+                    <Text style={styles.lableText}>Altura Atual: {altura}</Text>
+                </View>
+                <View style={styles.alturaArea}>
+                    <TextInput
+                        style={styles.inputTextEdit}
+                        value={newAltura}
+                        keyboardType="numeric"
+                        onChangeText={setNewAltura}
+                    />
+                    <TouchableOpacity
+                        style={styles.btnAltura}
+                        onPress={() => validateEdit()}
+                    >
+                        <Text style={styles.textButtonCalcu}>Editar</Text>
+                    </TouchableOpacity>
+                </View>
 
-                <Text style={styles.lableText}>Peso</Text>
-                <TextInput
-                    style={styles.inputText}
-                    onChangeText={setPeso}
-                    value={peso}
-                    placeholder="Ex: 75.45"
-                    keyboardType="numeric"
-                />
-                <TouchableOpacity
-                style={styles.buttonCalcu}
-                onPress={() => {validatorImc()}}
-                >
-                    <Text style={styles.textButtonCalcu}>{textButton}</Text>
-                </TouchableOpacity>
+                <Text style={styles.lableTextPeso}>Adicionar Peso</Text>
+                <View style={styles.pesoArea}>
+                    <TextInput
+                        style={styles.inputTextPeso}
+                        onChangeText={setPesoInput}
+                        value={pesoInput}
+                        keyboardType="numeric"
+                    />
+                    <TouchableOpacity
+                        style={styles.btnPeso}
+                        onPress={() => {
+                            adicionaPeso();
+                        }}
+                    >
+                        <Text style={styles.textButtonCalcu}>Adicionar</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <ResultImc messageResultImc={messageImc} ResultImc={imc} />
+            <ResultImc messageResultImc={message} ResultImc={imc} />
         </View >
     );
 }
@@ -81,15 +117,27 @@ const styles = StyleSheet.create({
     boxTitle: {
         alignItems: "center",
         justifyContent: "center",
-        paddingBottom: 15,
+        padding: 15,
+        marginTop: 30,
     },
     textTitle: {
         color: "#1b065e",
         fontSize: 24,
-        padding:15,
+        padding: 15,
         fontWeight: "bold",
     },
-    //style do form
+
+    //styles do form
+    alturaArea: {
+        flexDirection: 'row',
+        marginTop: 10,
+        justifyContent: 'space-around',
+    },
+    pesoArea: {
+        flexDirection: 'row',
+        marginTop: 10,
+        justifyContent: 'space-around',
+    },
     formContext: {
         width: "100%",
         height: "100%",
@@ -100,38 +148,59 @@ const styles = StyleSheet.create({
     form: {
         width: "100%",
         height: "auto",
-        marginTop: 30,
-        padding: 10,
+        marginTop: 50,
     },
     lableText: {
         color: "#1b065e",
-        fontSize: 18,
+        fontSize: 25,
         fontWeight: "bold",
         paddingLeft: 20,
+        paddingBottom: 10,
     },
-    inputText: {
-        width: "90%",
-        borderRadius: 50,
+    lableTextPeso: {
+        color: "#1b065e",
+        fontSize: 25,
+        fontWeight: "bold",
+        paddingLeft: 20,
+        paddingBottom: 10,
+        marginTop: 10,
+    },
+    inputTextEdit: {
+        width: 120,
+        borderRadius: 15,
+        backgroundColor: "#d6faff",
+        height: 35,
+        paddingLeft: 20,
+    },
+    inputTextPeso: {
+        width: 120,
+        borderRadius: 15,
         backgroundColor: "#d6faff",
         height: 40,
-        margin: 12,
-        paddingLeft: 10
+        paddingLeft: 20,
     },
     textButtonCalcu: {
         fontSize: 20,
-        fontWeight:"bold",
-        color:'#fff'
+        fontWeight: "bold",
+        color: '#fff'
     },
-    buttonCalcu: {
-        borderRadius:50,
-        alignItems:"center",
-        justifyContent:"center",
-        width:"90%",
+    btnAltura: {
+        borderRadius: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        width: 90,
+        height: 35,
+        marginLeft: 10,
         backgroundColor: '#1b065e',
-        paddingTop:14,
-        paddingBottom: 14,
-        marginLeft:12,
-        marginTop:30
+    },
+    btnPeso: {
+        borderRadius: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        width: 100,
+        height: 40,
+        marginLeft: 10,
+        backgroundColor: '#1b065e',
     },
 
     //styles do resultIMC

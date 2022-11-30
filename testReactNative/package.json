@@ -32,11 +32,12 @@
     "react-native-safe-area-context": "4.3.1",
     "react-native-screens": "~3.15.0",
     "react-native-web": "~0.18.7",
-    "sequelize": "^6.25.8",
+    "sequelize": "^6.26.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "nodemon": "^2.0.20",
     "sequelize-cli": "^6.5.2"
   },
   "private": true
