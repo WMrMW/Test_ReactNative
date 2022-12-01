@@ -48,7 +48,13 @@ export default function Cadastro() {
             })
         })
         let ress = await reqs.json();
-        setmessageee(ress);  
+        if(ress === 'Usuário cadastrado com sucesso!'){
+            setmessageee(ress);
+            setTimeout(()=>{
+              setmessageee('');
+            },5000) 
+        }
+       // setmessageee(ress);  
     }
   
 
@@ -61,7 +67,7 @@ export default function Cadastro() {
 
                 <View style={styles.formArea}>
                     {message && (
-                        <Text>{message}</Text>
+                        <Text style={styles.messageErrorLogin}>{message}</Text>
                     )}
                     <Text style={styles.textCamp}>Nome</Text>
                     <Controller
@@ -148,7 +154,7 @@ export default function Cadastro() {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.btnArea}>
-                    <TouchableOpacity style={styles.btnvoltar}onPress={() => { navigation.navigate('login') }}>
+                    <TouchableOpacity style={styles.btnvoltar} onPress={() => { navigation.navigate('login') }}>
                         <Text style={styles.textbtncadastro}>Voltar</Text>
                     </TouchableOpacity>
                 </View>
@@ -168,6 +174,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#8bfaff',
         padding: 15,
+    },
+    messageErrorLogin:{
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: "black",
+        alignSelf: 'center',
     },
     textBemVindo: {
         fontSize: 25,

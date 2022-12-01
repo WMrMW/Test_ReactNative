@@ -10,6 +10,7 @@ export default function Login({ navigation }) {
 
   const [emailLogin, setEmailLogin] = useState('');
   const [senhaLogin, setSenhaLogin] = useState('');
+  const [message, setmessageee] = useState('');
 
   const navigationimc = useNavigation();
 
@@ -24,7 +25,14 @@ export default function Login({ navigation }) {
             email:emailLogin,
             password: senhaLogin
         })
-      })
+      });
+      let json = await reqs.json();
+      if(json === 'Erro: Usuário não encontrado!'){
+          setmessageee(json);
+          setTimeout(()=>{
+            setmessageee('');
+          },5000)  
+    }
   }
 
   return (
@@ -34,6 +42,9 @@ export default function Login({ navigation }) {
       </Animatable.View>
 
       <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerForm}>
+      {message && (
+          <Text  style={styles.messageErrorLogin} >{message}</Text>
+        )}
         <Text style={styles.title}>Email</Text>
         <TextInput
           onChangeText={text=>setEmailLogin(text)}
@@ -73,6 +84,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#8bfaff',
   },
+  messageErrorLogin:{
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: "red",
+    alignSelf: 'center',
+  },
   containerHeader: {
     marginTop: '14%',
     marginBottom: '8%',
@@ -82,6 +99,8 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: "#1b065e",
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   containerForm: {
     backgroundColor: '#FFF',

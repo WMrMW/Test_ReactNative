@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const cors=require('cors');
 const model=require('./models');
+const { stringify } = require('uuid');
 
 let user= model.User;
 let app=express();
@@ -40,13 +41,12 @@ app.post('/login',async(req,res)=>{
             email: req.body.email, 
             password: req.body.password 
         }
-    })
-
+    });
     if(usuario === null){
-        return res.status(400).json({
-            erro: true,
-            mensagem: "Erro: Usuário ou senha incorreto"
-        });
+        res.send(JSON.stringify('Erro: Usuário não encontrado!'));
+    }else{
+        res.send(usuario);
+        
     }
 
     if(!(await bcrypt.compare(req.body.password, usuario.password))){
@@ -55,6 +55,7 @@ app.post('/login',async(req,res)=>{
             mensagem:"Erro: Usuário ou a senha incorreta!"
         })
     }
+    /*
     let token = jwt.sign({id: user.id},"D62S",{
        expiresIn: '7D'
     });
@@ -62,7 +63,7 @@ app.post('/login',async(req,res)=>{
         erro:false,
         mensagem: "Login realizado com sucesso!",
         token
-    })
+    })*/
 });
 
 
