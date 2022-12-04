@@ -34,7 +34,7 @@ export default function Cadastro() {
     });
 
     async function fnCadastrar(){
-        const reqs = await fetch('http://10.0.10.128:3000/cadastro',{
+        const reqs = await fetch('http://192.168.1.107:3000/cadastro',{
             method: 'POST',
             headers:{
                 Accept: 'application/json',
@@ -113,9 +113,9 @@ export default function Cadastro() {
                         name = "dataNasc"
                         render={({field: { onChange,onBlur,value} }) => (
                           <TextInput 
-                            style={[styles.textInput,
+                          style={[styles.textInput,
                             {borderWidth: errors.dataNasc && 1,
-                            borderColor: errors.dataNasc && '#ff375b'}]}
+                                borderColor: errors.dataNasc && '#ff375b'}]}
                             keyboardType = {"numeric"} 
                             onChangeText={text=>setDataNasc(text)}
                             onBlur={onBlur}
