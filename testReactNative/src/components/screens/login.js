@@ -15,7 +15,7 @@ export default function Login({ navigation }) {
   const navigationimc = useNavigation();
 
   async function fnLogin(){
-    const reqs = await fetch('http://192.168.1.107:3000/login',{
+    const reqs = await fetch('http://10.0.10.128:3000/login',{
         method: 'POST',
         headers:{
             Accept: 'application/json',
@@ -64,6 +64,7 @@ export default function Login({ navigation }) {
         <TextInput
           onChangeText={text=>setSenhaLogin(text)}
           placeholder="Digite sua senha"
+          secureTextEntry= {true}
           style={styles.input}
         />
 

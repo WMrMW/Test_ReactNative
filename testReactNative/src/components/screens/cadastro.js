@@ -14,6 +14,17 @@ import * as Animatable from 'react-native-animatable';
 
 export default function Cadastro() {
     
+    const schema = yup.object({
+        nome: yup.string().required("Informe seu nome"),
+        email: yup.string().email("Email invalido").required("Informe seu email"),
+        dataNasc : yup.date("Data invalida").required("Informe sua data de nascimento"),
+        senha : yup.string().min(6, "A senha deve ter pelo menos 6 digitos").required("Informe sua senha"), 
+    })
+
+    const { control, handleSubmit , formState: {errors}} = useForm({
+        resolver: yupResolver(schema)
+    });
+
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
@@ -22,19 +33,9 @@ export default function Cadastro() {
 
     const navigationimc = useNavigation();
  
-    const schema = yup.object({
-        nome: yup.string().required("Informe seu nome"),
-        email: yup.string().email("Email invalido").required("Informe seu email"),
-        dataNasc : yup.date("Data invalida").required("Informe sua data de nascimento"),
-        senha : yup.string().min(6, "A senha deve ter pelo menos 6 digitos").required("Informe seu nome"), 
-    })
-
-    const { control, handleSubmit , formState: {errors}} = useForm({
-        resolver: yupResolver(schema)
-    });
 
     async function fnCadastrar(){
-        const reqs = await fetch('http://192.168.1.107:3000/cadastro',{
+        const reqs = await fetch('http://10.0.10.128:3000/cadastro',{
             method: 'POST',
             headers:{
                 Accept: 'application/json',
@@ -52,7 +53,9 @@ export default function Cadastro() {
             setmessageee(ress);
             setTimeout(()=>{
               setmessageee('');
-            },5000) 
+            },5000)
+           navigation.navigate("Login") 
+                
         }
        // setmessageee(ress);  
     }
@@ -78,7 +81,8 @@ export default function Cadastro() {
                             style={[styles.textInput,
                             {borderWidth: errors.name && 1,
                             borderColor: errors.name && '#ff375b'}]}
-                            onChangeText={text=>setNome(text)} 
+                            //onChangeText={text=>setNome(text)} 
+                            onChangeText={onChange}
                             onBlur={onBlur}
                             value ={value}
                             placeholder= "Digite seu nome"
@@ -96,7 +100,8 @@ export default function Cadastro() {
                             style={[styles.textInput,
                             {borderWidth: errors.email && 1,
                             borderColor: errors.email && '#ff375b'}]}
-                            onChangeText={text=>setEmail(text)} 
+                            //onChangeText={text=>setEmail(text)} 
+                            onChangeText={onChange}
                             onBlur={onBlur}
                             value ={value}
                             placeholder = "Digite seu email"
@@ -117,7 +122,8 @@ export default function Cadastro() {
                             {borderWidth: errors.dataNasc && 1,
                                 borderColor: errors.dataNasc && '#ff375b'}]}
                             keyboardType = {"numeric"} 
-                            onChangeText={text=>setDataNasc(text)}
+                            //onChangeText={text=>setDataNasc(text)}
+                            onChangeText={onChange}
                             onBlur={onBlur}
                             value ={value}
                             placeholder= "Digite sua data de nascimento"
@@ -137,7 +143,8 @@ export default function Cadastro() {
                             style={[styles.textInput,
                             {borderWidth: errors.senha && 1,
                             borderColor: errors.senha && '#ff375b'}]}
-                            onChangeText={text=>setSenha(text)}
+                            //onChangeText={text=>setSenha(text)}
+                            onChangeText={onChange}
                             onBlur={onBlur}
                             value ={value}
                             placeholder= "Digite sua senha"
@@ -149,7 +156,7 @@ export default function Cadastro() {
 
                 </View>
                 <View style={styles.btnArea}>
-                    <TouchableOpacity style={styles.btnCadastro} onPress={fnCadastrar}>
+                    <TouchableOpacity style={styles.btnCadastro} onPress={handleSubmit(fnCadastrar)}>
                         <Text style={styles.textbtncadastro}>Cadastrar</Text>
                     </TouchableOpacity>
                 </View>
