@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 app.post('/cadastro',async(req,res)=>{
   
-    req.body.password =  await bcrypt.hash(req.body.password, 6);
+    req.body.password =  await bcrypt.hash(req.body.password, 8);
     let reqs = await model.User.create({
         'name' : req.body.nomeUser,
         'password' :req.body.password,
