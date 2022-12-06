@@ -19,6 +19,10 @@ export default function Cadastro() {
     const [senha, setSenha] = useState('');
     const [dataNasc, setDataNasc] = useState('');
     const [message, setmessageee] = useState('');
+    const [messageErrorNome, setmessageErrorNome] = useState('');
+    const [messageErrorEmail, semessageErrorEmail] = useState('');
+    const [messageErrorSenha, setmessageErrorSenha] = useState('');
+    const [messageErrorDate, setmessageErrorDate] = useState('');
 
     const navigationimc = useNavigation();
  
@@ -33,6 +37,36 @@ export default function Cadastro() {
         resolver: yupResolver(schema)
     });
 
+
+    function validar(){
+
+        const email_validation = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        const date_validation =  /^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$/;
+        
+        if(nome.trim() === ''){
+          setmessageErrorNome("Informe seu nome");
+        }
+        if(email.trim() === ''){
+            semessageErrorEmail("Email invalido");
+         }
+         if(!(email_validation).test(email.toLowerCase())){
+            semessageErrorEmail("Email invalido");
+         }/*
+         if(dataNasc.trim() === ''){
+            setmessageErrorDate("Data invalida: DD/MM/YYYY");
+         }*/
+         if(!(date_validation).test(dataNasc)){
+            setmessageErrorDate("Data invalida: DD/MM/YYYY");
+         }
+         if(senha.trim() === ''){
+            setmessageErrorSenha("A senha deve ter pelo menos 6 digitos");
+         }
+         if(senha.trim().length < 6){
+            setmessageErrorSenha("A senha deve ter pelo menos 6 digitos");
+         }
+        
+
+    }
     async function fnCadastrar(){
         const reqs = await fetch('http://10.0.10.128:3000/cadastro',{
             method: 'POST',
@@ -55,7 +89,7 @@ export default function Cadastro() {
             },3000) 
             setTimeout(()=>{
                 navigationimc.navigate('Login')
-              },4000)
+              },3500)
         }
        // setmessageee(ress);  
     }
@@ -89,6 +123,9 @@ export default function Cadastro() {
                                 />
                             )}
                         />
+                        {messageErrorNome && (
+                            <Text style={styles.messageErrorCadastro}>{messageErrorNome}</Text>
+                        )}
                         {errors.name &&  <Text style = {styles.labelError}>{errors.name?.message}</Text>}
 
                     <Text style={styles.textCamp}>Email</Text> 
@@ -108,6 +145,9 @@ export default function Cadastro() {
                                 />
                             )}
                         />
+                         {messageErrorEmail && (
+                            <Text style={styles.messageErrorCadastro}>{messageErrorEmail}</Text>
+                        )}
 
                     {errors.email &&  <Text style = {styles.labelError}>{errors.email?.message}</Text>}
 
@@ -129,6 +169,9 @@ export default function Cadastro() {
                                 />
                             )}
                         />
+                        {messageErrorDate && (
+                            <Text style={styles.messageErrorCadastro}>{messageErrorDate}</Text>
+                        )}
                         
                         {errors.dataNasc &&  <Text style = {styles.labelError}>{errors.dataNasc?.message}</Text>}
 
@@ -149,12 +192,15 @@ export default function Cadastro() {
                                 />
                             )}
                         />
+                         {messageErrorSenha && (
+                            <Text style={styles.messageErrorCadastro}>{messageErrorSenha}</Text>
+                        )}
                         {errors.senha &&  <Text style = {styles.labelError}>{errors.senha?.message}</Text>}
 
 
                     </View>
                     <View style={styles.btnArea}>
-                        <TouchableOpacity style={styles.btnCadastro} onPress={fnCadastrar}>
+                        <TouchableOpacity style={styles.btnCadastro} onPress={validar}>
                             <Text style={styles.textbtncadastro}>Cadastrar</Text>
                         </TouchableOpacity>
                     <TouchableOpacity
@@ -191,6 +237,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#8bfaff',
         padding: 15,
     },
+    messageErrorCadastro:{
+        fontSize: 15,
+        color: 'red',
+        },
     messageErrorLogin:{
         fontSize: 14,
         fontWeight: 'bold',
