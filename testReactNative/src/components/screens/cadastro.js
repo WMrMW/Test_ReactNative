@@ -33,7 +33,7 @@ export default function Cadastro() {
 
     const navigationimc = useNavigation();
  
-  /*  const schema = yup.object({
+   const schema = yup.object({
         nome: yup.string().required("Informe seu nome"),
         email: yup.string().email("Email invalido").required("Informe seu email"),
         dataNasc : yup.date("Data invalida").required("Informe sua data de nascimento"),
@@ -42,7 +42,7 @@ export default function Cadastro() {
 
     const { control, handleSubmit , formState: {errors}} = useForm({
         resolver: yupResolver(schema)
-    });*/
+    });
 
 
     const validar = () => {
@@ -172,7 +172,7 @@ export default function Cadastro() {
                             {messageErrorNome && (
                                 <Text style={styles.messageErrorCadastro}>Informe seu nome</Text>
                             )}
-                            
+
                             {errors.name &&  <Text style = {styles.labelError}>{errors.name?.message}</Text>}
 
                         <Text style={styles.textCamp}>Email</Text> 

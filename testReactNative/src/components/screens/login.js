@@ -2,7 +2,7 @@ import React , { useState }from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MyTabs from "./principal";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import * as Animatable from 'react-native-animatable';
 
@@ -32,15 +32,20 @@ export default function Login({ navigation }) {
           setTimeout(()=>{
             setmessageee('');
           },5000)  
+          await AsyncStorage.clear();
     }else{
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [
-            { name: 'Principal' },
-          ],
-        }));
+      let userData = await AsyncStorage.setItem('userData', JSON.stringify(json)) 
+      navigation.navigate('Principal');
     }
+    /*
+    if(json === 'Usuário encontrado!'){
+        navigationimc.navigate('Login')     
+    }
+
+    else{
+      let userData = await AsyncStorage.setItem('userData', JSON.stringify(json)) 
+      navigation.navigate('Principal');
+    }*/
   }
 
   return (
