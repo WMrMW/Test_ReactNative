@@ -1,30 +1,144 @@
-import React, { useState } from "react"
-import { Text, TextInput, View, StyleSheet, TouchableOpacity, Keyboard } from "react-native"
+import React, { useState, useEffect } from "react";
+import { Text, TextInput, View, StyleSheet, TouchableOpacity, Keyboard, ScrollView } from "react-native";
+import { Feather } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function ResultImc(props) {
+function Lista(props) {
+
+    async function getItems() {
+        return await AsyncStorage.getItem('pesos')
+            .then(response => {
+                if (response)
+                    return Promise.resolve(JSON.parse(response));
+                else
+                    return Promise.resolve([]);
+            })
+    }
+
+    async function deleteItem(id) {
+        let savedItems = await getItems();
+        const index = await savedItems.findIndex(item => item.id === id);
+        savedItems.splice(index, 1);
+        await AsyncStorage.setItem('pesos', JSON.stringify(savedItems));
+        props.flag(true);
+        return;
+    }
+
     return (
-        <View style={styles.resultIMC}>
-            <Text style={styles.information}>{props.messageResultImc}</Text>
-            <Text style={styles.numberIMC}>{props.ResultImc}</Text>
+        <View style={styles.containerList}>
+            <Text style={styles.textPeso}>{props.item}</Text>
+            <TouchableOpacity style={styles.deleteButton}
+                onPress={() => {
+                    deleteItem(props.id);
+                    props.flag(false);
+                }}>
+                <Feather name='trash-2' size={20} color={'#fff'} />
+            </TouchableOpacity>
         </View>
     );
 }
 
 export default function Form() {
 
-    const [altura, setAltura] = useState(1.75);
+    const [altura, setAltura] = useState(0);
     const [newAltura, setNewAltura] = useState('');
     const [peso, setPeso] = useState(null);
     const [pesoInput, setPesoInput] = useState('');
-    const [message, setMessage] = useState('');
-    const [imc, setImc] = useState(null);
+    const [flag, setFlag] = useState(false);
+    const [items, setItems] = useState([]);
 
 
-    function imcCalculator() {
-        return setImc((peso / (altura ** 2)).toFixed(2));
+    useEffect(() => {
+        async function getPeso() {
+            const response = await AsyncStorage.getItem('peso');
+            const pes = JSON.parse(response);
+            if (pes !== null) {
+                try {
+                    setPesoInput(pes.peso);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+        getPeso();
+    }, [])
+
+    useEffect(() => {
+        async function getAltura() {
+            const response = await AsyncStorage.getItem('altura');
+            const alt = JSON.parse(response);
+            if (alt !== null) {
+                try {
+                    setAltura(alt.altura);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+        getAltura();
+    }, []);
+
+    useEffect(() => {
+        async function saveAltura() {
+            try {
+                const alt = { id: new Date().getTime(), altura: altura };
+                AsyncStorage.setItem('altura', JSON.stringify(alt));
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        saveAltura();
+    }, [altura]);
+
+    useEffect(() => {
+        async function savePeso() {
+            let response = fetch('http://192.168.2.124:3000/savePeso', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    valor: peso
+                })
+            });
+        }
+        savePeso();
+    }, [peso]);
+
+
+    useEffect(() => {
+        getItems().then(items => setItems(items));
+    }, [flag]);
+
+
+    async function getItems() {
+        return await AsyncStorage.getItem('pesos')
+            .then(response => {
+                if (response)
+                    return Promise.resolve(JSON.parse(response));
+                else
+                    return Promise.resolve([]);
+            })
     }
 
-    function validateEdit() {
+    async function Adicionar() {
+        const listItem = { id: new Date().getTime(), peso: Number(peso) };
+        let savedItems = [];
+        const response = await AsyncStorage.getItem('pesos');
+
+        if (response) savedItems = JSON.parse(response);
+        savedItems.push(listItem);
+
+        await AsyncStorage.setItem('pesos', JSON.stringify(savedItems));
+        setFlag(true);
+    }
+
+
+
+
+
+    async function validateEdit() {
 
         if (newAltura.length > 0) {
             let aux = '';
@@ -37,27 +151,34 @@ export default function Form() {
             }
             let n = Number(aux);
             setAltura(n);
+            setNewAltura('');
             Keyboard.dismiss();
         } else {
             alert("Por favor preencha o campo corretamente!");
         }
     }
 
+    function validateEditPeso() {
+        let aux = '';
+        for (let index = 0; index < pesoInput.length; index++) {
+            if (pesoInput[index] === ',') {
+                aux += '.';
+            } else {
+                aux += pesoInput[index];
+            }
+        }
+        return setPeso(Number(aux));
+    }
+
     function adicionaPeso() {
 
         if (pesoInput.length > 0) {
-            let aux = '';
-            for (let index = 0; index < pesoInput.length; index++) {
-                if (pesoInput[index] === ',') {
-                    aux += '.';
-                } else {
-                    aux += pesoInput[index];
-                }
-            }
-            let n = Number(aux);
-            setPeso(n);
-            imcCalculator();
-            setMessage("Seu IMC é : ");
+            validateEditPeso();
+            Adicionar();
+            setFlag(false);
+            setPesoInput('');
+            Keyboard.dismiss();
+
         } else {
             alert("Por favor preencha o campo corretamente!");
         }
@@ -94,6 +215,7 @@ export default function Form() {
                         style={styles.inputTextPeso}
                         onChangeText={setPesoInput}
                         value={pesoInput}
+                        placeholder={`${pesoInput}`}
                         keyboardType="numeric"
                     />
                     <TouchableOpacity
@@ -106,7 +228,15 @@ export default function Form() {
                     </TouchableOpacity>
                 </View>
             </View>
-            <ResultImc messageResultImc={message} ResultImc={imc} />
+            <View style={{ width: '90%', height: '35%', marginTop: 10, alignItems: 'center' }}>
+                <ScrollView
+                    style={styles.scrollContainer}
+                    contentContainerStyle={styles.itemsContainer}>
+                    {items.map(item => {
+                        return <Lista key={item.id} id={item.id} item={item.peso} flag={setFlag} />
+                    })}
+                </ScrollView>
+            </View>
         </View >
     );
 }
@@ -185,7 +315,7 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
     btnAltura: {
-        borderRadius: 50,
+        borderRadius: 30,
         alignItems: "center",
         justifyContent: "center",
         width: 90,
@@ -194,7 +324,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#1b065e',
     },
     btnPeso: {
-        borderRadius: 50,
+        borderRadius: 30,
         alignItems: "center",
         justifyContent: "center",
         width: 100,
@@ -203,23 +333,41 @@ const styles = StyleSheet.create({
         backgroundColor: '#1b065e',
     },
 
-    //styles do resultIMC
-    resultIMC: {
+    //styles da ScrollArea
+    deleteButton: {
+        height: 35,
+        width: 60,
+        backgroundColor: '#1b065e',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    buttonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontWeight: 'bold',
+    },
+    textPeso: {
+        paddingTop: 7,
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#1b065e',
+    },
+    scrollContainer: {
         flex: 1,
-        marginTop: 15,
-        paddingTop: 60,
-        borderRadius: 50,
-        alignItems: "center",
-        width: "100%",
+        width: '90%',
     },
-    numberIMC: {
-        fontSize: 18,
-        color: "#1b065e",
-        fontWeight: "bold"
+    itemsContainer: {
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        backgroundColor: '#fff',
     },
-    information: {
-        fontSize: 18,
-        color: "#1b065e",
-        fontWeight: "bold"
-    }
+    containerList: {
+        borderBottomWidth: 1,
+        borderBottomColor: '#CCC',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        padding: 20,
+    },
+
 });
