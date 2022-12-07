@@ -27,7 +27,7 @@ export default function Login({ navigation }) {
         })
       });
       let json = await reqs.json();
-      if(json === 'Erro: Usuário não encontrado!'){
+      if(json === 'Erro: Usuário ou senha incorretos!'){
           setmessageee(json);
           setTimeout(()=>{
             setmessageee('');
