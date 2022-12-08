@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Keyboard, ScrollView, StatusBar, TouchableWithoutFeedback } from "react-native";
-import { Text, TextInput, View, StyleSheet, Image, KeyboardAvoidingView,Platform, TouchableOpacity } from "react-native";
+import { Text, TextInput, View, StyleSheet, Image, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 import config from "../../../config/config.json"

@@ -137,7 +137,6 @@ export default function Form() {
 
 
 
-
     async function validateEdit() {
 
         if (newAltura.length > 0) {
@@ -185,59 +184,60 @@ export default function Form() {
     }
 
 
-    return (
-        <View style={styles.formContext}>
-            <View style={styles.boxTitle}>
-                <Text style={styles.textTitle}>Dados</Text>
-            </View>
-            <View style={styles.form}>
-                <View>
-                    <Text style={styles.lableText}>Altura Atual: {altura}</Text>
+    return ( 
+            <View style={styles.formContext} behavior="position" enabled>
+                <View style={styles.boxTitle}>
+                    <Text style={styles.textTitle}>Dados</Text>
                 </View>
-                <View style={styles.alturaArea}>
-                    <TextInput
-                        style={styles.inputTextEdit}
-                        value={newAltura}
-                        keyboardType="numeric"
-                        onChangeText={setNewAltura}
-                    />
-                    <TouchableOpacity
-                        style={styles.btnAltura}
-                        onPress={() => validateEdit()}
-                    >
-                        <Text style={styles.textButtonCalcu}>Editar</Text>
-                    </TouchableOpacity>
-                </View>
+                <View style={styles.form}>
+                    <View>
+                        <Text style={styles.lableText}>Altura Atual: {altura}</Text>
+                    </View>
+                    <View style={styles.alturaArea}>
+                        <TextInput
+                            style={styles.inputTextEdit}
+                            value={newAltura}
+                            keyboardType="numeric"
+                            onChangeText={setNewAltura}
+                        />
+                        <TouchableOpacity
+                            style={styles.btnAltura}
+                            onPress={() => validateEdit()}
+                        >
+                            <Text style={styles.textButtonCalcu}>Editar</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                <Text style={styles.lableTextPeso}>Adicionar Peso</Text>
-                <View style={styles.pesoArea}>
-                    <TextInput
-                        style={styles.inputTextPeso}
-                        onChangeText={setPesoInput}
-                        value={pesoInput}
-                        placeholder={`${pesoInput}`}
-                        keyboardType="numeric"
-                    />
-                    <TouchableOpacity
-                        style={styles.btnPeso}
-                        onPress={() => {
-                            adicionaPeso();
-                        }}
-                    >
-                        <Text style={styles.textButtonCalcu}>Adicionar</Text>
-                    </TouchableOpacity>
+                    <Text style={styles.lableTextPeso}>Adicionar Peso</Text>
+                    <View style={styles.pesoArea}>
+                        <TextInput
+                            style={styles.inputTextPeso}
+                            onChangeText={setPesoInput}
+                            value={pesoInput}
+                            placeholder={`${pesoInput}`}
+                            keyboardType="numeric"
+                        />
+                        <TouchableOpacity
+                            style={styles.btnPeso}
+                            onPress={() => {
+                                adicionaPeso();
+                            }}
+                        >
+                            <Text style={styles.textButtonCalcu}>Adicionar</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
-            <View style={{ width: '90%', height: '35%', marginTop: 10, alignItems: 'center' }}>
-                <ScrollView
-                    style={styles.scrollContainer}
-                    contentContainerStyle={styles.itemsContainer}>
-                    {items.map(item => {
-                        return <Lista key={item.id} id={item.id} item={item.peso} flag={setFlag} />
-                    })}
-                </ScrollView>
-            </View>
-        </View >
+                <View style={{ width: '90%', height: '35%', marginTop: 10, alignItems: 'center' }}>
+                    <ScrollView
+                        style={styles.scrollContainer}
+                        contentContainerStyle={styles.itemsContainer}>
+                        {items.map(item => {
+                            return <Lista key={item.id} id={item.id} item={item.peso} flag={setFlag} />
+                        })}
+                    </ScrollView>
+                </View>
+            </View >
+       
     );
 }
 

@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image , ScrollView} from 'react-native';
 import Grafic from '../grafic/index';
 import { CommonActions } from '@react-navigation/native';
 
@@ -46,6 +46,7 @@ export default function Home() {
 
 
   return (
+    <ScrollView>
     <View style={styles.container}>
       <View style={styles.btnSairArea}>
         <TouchableOpacity
@@ -79,6 +80,7 @@ export default function Home() {
           <Grafic/>
       </View>
     </View>
+    </ScrollView>
   );
 }
 

@@ -1,5 +1,5 @@
 import React , { useState }from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity ,ScrollView} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MyTabs from "./principal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -37,18 +37,10 @@ export default function Login({ navigation }) {
       let userData = await AsyncStorage.setItem('userData', JSON.stringify(json)) 
       navigation.navigate('Principal');
     }
-    /*
-    if(json === 'Usuário encontrado!'){
-        navigationimc.navigate('Login')     
-    }
-
-    else{
-      let userData = await AsyncStorage.setItem('userData', JSON.stringify(json)) 
-      navigation.navigate('Principal');
-    }*/
   }
 
   return (
+    <ScrollView>
     <View style={styles.container}>
       <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
         <Text style={styles.message}>Bem-vindo(a)</Text>
@@ -90,6 +82,7 @@ export default function Login({ navigation }) {
 
       </Animatable.View>
     </View>
+    </ScrollView>
   );
 }
 
