@@ -3,6 +3,8 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 
 import { useNavigation } from '@react-navigation/native';
 import MyTabs from "./principal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import config from '../../../config/config.json';
+
 
 import * as Animatable from 'react-native-animatable';
 
@@ -15,7 +17,7 @@ export default function Login({ navigation }) {
   const navigationimc = useNavigation();
 
   async function fnLogin() {
-    const reqs = await fetch('http://192.168.2.124:3000/login', {
+    const reqs = await fetch(`${config.urlRoot}login`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

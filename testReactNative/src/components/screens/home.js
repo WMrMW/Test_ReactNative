@@ -4,6 +4,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'rea
 import Grafic from '../grafic/index';
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '../../../config/config.json';
+
 
 
 export default function Home() {
@@ -21,7 +23,7 @@ export default function Home() {
     async function getUserDados() {
       let userDados = await AsyncStorage.getItem('userData');
       userDados = JSON.parse(userDados);
-      const reqs = await fetch('http://192.168.2.124:3000/getUser', {
+      const reqs = await fetch(`${config.urlRoot}getUser`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',

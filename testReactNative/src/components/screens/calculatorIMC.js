@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Text, TextInput, View, StyleSheet, TouchableOpacity, Keyboard, ScrollView } from "react-native";
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '../../../config/config.json';
 
 function Lista(props) {
 
     async function deleteItem(id) {
         let userDados = await AsyncStorage.getItem('userData');
         userDados = JSON.parse(userDados);
-        await fetch('http://192.168.2.124:3000/delete', {
+        await fetch(`${config.urlRoot}delete`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -18,9 +19,7 @@ function Lista(props) {
                 id: id
             })
         });
-        console.log('aq');
-        props.fl ? props.att(false) : props.att(true);
-        console.log(props.fl);
+        props.att();
         return;
     }
 
@@ -44,7 +43,7 @@ export default function Form() {
         async function getAltura() {
             let userDados = await AsyncStorage.getItem('userData');
             userDados = JSON.parse(userDados);
-            const reqs = await fetch('http://192.168.2.124:3000/getUser', {
+            const reqs = await fetch(`${config.urlRoot}getUser`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -59,6 +58,7 @@ export default function Form() {
                 setAltura(json.altura)
                 setPeso(json.peso);
                 setAlturaText(json.altura);
+                getItems().then((itens)=>{setItems(itens)});
             }
         }
         getAltura();
@@ -74,12 +74,11 @@ export default function Form() {
     const [pesoInput, setPesoInput] = useState('');
     const [items, setItems] = useState([]);
     const [flag, setFlag] = useState(false);
-    const [flag_a, setFlag_a] = useState(false);
-    
+
     async function getItems() {
         let userDados = await AsyncStorage.getItem('userData');
         userDados = JSON.parse(userDados);
-        const reqs = await fetch('http://192.168.2.124:3000/getPesos', {
+        const reqs = await fetch(`${config.urlRoot}getPesos`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -90,7 +89,6 @@ export default function Form() {
             })
         });
         const pesos = await reqs.json();
-        console.log(flag);
         return pesos;
     }
 
@@ -100,7 +98,7 @@ export default function Form() {
             let userDados = await AsyncStorage.getItem('userData');
             userDados = JSON.parse(userDados);
             const imc = peso / (altura * altura);
-            await fetch('http://192.168.2.124:3000/editAlt', {
+            await fetch(`${config.urlRoot}editAlt`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -117,17 +115,17 @@ export default function Form() {
             saveAltura();
         }
     }, [altura_v]);
-
+/*
     useEffect(() => {
         getItems().then((iten) => { setItems(iten); });
-    }, [flag])
+    }, [flag])*/
 
     useEffect(() => {
         async function savePeso() {
             let userDados = await AsyncStorage.getItem('userData');
             userDados = JSON.parse(userDados);
             const imc = peso / (altura * altura);
-            await fetch('http://192.168.2.124:3000/editPeso', {
+            await fetch(`${config.urlRoot}editPeso`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -145,7 +143,7 @@ export default function Form() {
 
             let userDados = await AsyncStorage.getItem('userData');
             userDados = JSON.parse(userDados);
-            await fetch('http://192.168.2.124:3000/addPeso', {
+            await fetch(`${config.urlRoot}addPeso`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -247,8 +245,7 @@ export default function Form() {
                         style={styles.btnPeso}
                         onPress={() => {
                             adicionaPeso();
-                            flag ? setFlag(false) : setFlag(true);
-                            setFlag_a(flag);
+                            getItems().then((itens)=>{setItems(itens)});
                         }}
                     >
                         <Text style={styles.textButtonCalcu}>Adicionar</Text>
@@ -260,7 +257,7 @@ export default function Form() {
                     style={styles.scrollContainer}
                     contentContainerStyle={styles.itemsContainer}>
                     {items.length > 0 ? items.map((item) => {
-                        return <Lista key={item.id} id={item.id} item={item.valor} att={setFlag} fl={flag_a} />
+                        return <Lista key={item.id} id={item.id} item={item.valor} att={()=> {getItems().then((itens)=>{setItems(itens)})}} />
                     }) : ''}
                 </ScrollView>
             </View>

@@ -29,7 +29,10 @@ app.post('/delete',async (req,res)=>{
 
 app.post('/getPesos', async (req, res) => {
     const dados = req.body;
-    peso.findAll({
+    await peso.findAll({
+        attributes:[
+            'id','valor'
+        ],
         where: {
             userId: dados.id
         }

@@ -7,6 +7,7 @@ import config from "../../../config/config.json"
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
+
 import * as Animatable from 'react-native-animatable';
 
 
@@ -113,7 +114,7 @@ export default function Cadastro() {
    }
 
     async function fnCadastrar(){
-        const reqs = await fetch('http://192.168.2.124:3000/cadastro',{
+        const reqs = await fetch(`${config.urlRoot}cadastro`,{
             method: 'POST',
             headers:{
                 Accept: 'application/json',
