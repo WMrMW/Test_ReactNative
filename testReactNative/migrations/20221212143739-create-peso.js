@@ -1,34 +1,28 @@
 'use strict';
+
+const { default: Reference } = require('yup/lib/Reference');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('Pesos', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
-      },
-      password: {
-        type: Sequelize.STRING
-      },
-      email: {
-        type: Sequelize.STRING
-      },
-      data: {
-        type: Sequelize.STRING
-      },
-      altura:{
+      valor: {
         type: Sequelize.FLOAT
       },
-      peso:{
-        type: Sequelize.FLOAT
-      },
-      imc:{
-        type: Sequelize.FLOAT
+      userId: {
+        type: Sequelize.INTEGER,
+        references:{
+          model:'users',
+          key:'id'
+        },
+        onUpdate:'cascade',
+        onDelete:'cascade'
       },
       createdAt: {
         allowNull: false,
@@ -41,6 +35,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('Pesos');
   }
 };

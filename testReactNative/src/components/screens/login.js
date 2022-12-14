@@ -1,5 +1,5 @@
-import React , { useState }from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity ,ScrollView} from 'react-native';
+import React, { useState } from "react";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MyTabs from "./principal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -14,74 +14,74 @@ export default function Login({ navigation }) {
 
   const navigationimc = useNavigation();
 
-  async function fnLogin(){
-    const reqs = await fetch('http://10.0.10.128:3000/login',{
-        method: 'POST',
-        headers:{
-            Accept: 'application/json',
-            'Content-Type' : 'application/json'
-        },
-        body: JSON.stringify({
-            email:emailLogin,
-            password: senhaLogin
-        })
-      });
-      let json = await reqs.json();
-      if(json === 'Erro: Usuário ou senha incorretos!'){
-          setmessageee(json);
-          setTimeout(()=>{
-            setmessageee('');
-          },5000)  
-          await AsyncStorage.clear();
-    }else{
-      let userData = await AsyncStorage.setItem('userData', JSON.stringify(json)) 
+  async function fnLogin() {
+    const reqs = await fetch('http://192.168.2.124:3000/login', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: emailLogin,
+        password: senhaLogin
+      })
+    });
+    let json = await reqs.json();
+    if (json === 'Erro: Usuário ou senha incorretos!') {
+      setmessageee(json);
+      setTimeout(() => {
+        setmessageee('');
+      }, 5000)
+      await AsyncStorage.clear();
+    } else {
+      await AsyncStorage.setItem('userData', JSON.stringify(json))
       navigation.navigate('Principal');
     }
   }
 
   return (
     <ScrollView>
-    <View style={styles.container}>
-      <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
-        <Text style={styles.message}>Bem-vindo(a)</Text>
-      </Animatable.View>
+      <View style={styles.container}>
+        <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
+          <Text style={styles.message}>Bem-vindo(a)</Text>
+        </Animatable.View>
 
-      <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerForm}>
-      {message && (
-          <Text  style={styles.messageErrorLogin} >{message}</Text>
-        )}
-        <Text style={styles.title}>Email</Text>
-        <TextInput
-          onChangeText={text=>setEmailLogin(text)}
-          placeholder="Digite seu email"
-          style={styles.input}
-        />
+        <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerForm}>
+          {message && (
+            <Text style={styles.messageErrorLogin} >{message}</Text>
+          )}
+          <Text style={styles.title}>Email</Text>
+          <TextInput
+            onChangeText={text => setEmailLogin(text)}
+            placeholder="Digite seu email"
+            style={styles.input}
+          />
 
-        <Text style={styles.title}>Senha</Text>
-        <TextInput
-          onChangeText={text=>setSenhaLogin(text)}
-          placeholder="Digite sua senha"
-          secureTextEntry= {true}
-          style={styles.input}
-        />
+          <Text style={styles.title}>Senha</Text>
+          <TextInput
+            onChangeText={text => setSenhaLogin(text)}
+            placeholder="Digite sua senha"
+            secureTextEntry={true}
+            style={styles.input}
+          />
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => fnLogin()}
-        >
-          <Text style={styles.buttonText}>Acessar</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => fnLogin()}
+          >
+            <Text style={styles.buttonText}>Acessar</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.buttonregister}
-          onPress={() => { navigation.navigate('Cadastro') }}
-        >
-          <Text style={styles.registerText}>Não possui uma conta ? Cadastre-se</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonregister}
+            onPress={() => { navigation.navigate('Cadastro') }}
+          >
+            <Text style={styles.registerText}>Não possui uma conta ? Cadastre-se</Text>
+          </TouchableOpacity>
 
 
-      </Animatable.View>
-    </View>
+        </Animatable.View>
+      </View>
     </ScrollView>
   );
 }
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#8bfaff',
   },
-  messageErrorLogin:{
+  messageErrorLogin: {
     fontSize: 14,
     fontWeight: 'bold',
     color: "red",

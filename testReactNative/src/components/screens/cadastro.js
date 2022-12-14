@@ -113,7 +113,7 @@ export default function Cadastro() {
    }
 
     async function fnCadastrar(){
-        const reqs = await fetch('http://10.0.10.128:3000/cadastro',{
+        const reqs = await fetch('http://192.168.2.124:3000/cadastro',{
             method: 'POST',
             headers:{
                 Accept: 'application/json',

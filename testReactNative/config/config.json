@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "root",
-    "password": "christian16fla",
+    "password": "root",
     "database": "test_imc",
     "host": "127.0.0.1",
     "dialect": "mysql"

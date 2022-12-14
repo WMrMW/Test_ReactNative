@@ -5,22 +5,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Lista(props) {
 
-    async function getItems() {
-        return await AsyncStorage.getItem('pesos')
-            .then(response => {
-                if (response)
-                    return Promise.resolve(JSON.parse(response));
-                else
-                    return Promise.resolve([]);
-            })
-    }
-
     async function deleteItem(id) {
-        let savedItems = await getItems();
-        const index = await savedItems.findIndex(item => item.id === id);
-        savedItems.splice(index, 1);
-        await AsyncStorage.setItem('pesos', JSON.stringify(savedItems));
-        props.flag(true);
+        let userDados = await AsyncStorage.getItem('userData');
+        userDados = JSON.parse(userDados);
+        await fetch('http://192.168.2.124:3000/delete', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id
+            })
+        });
+        console.log('aq');
+        props.fl ? props.att(false) : props.att(true);
+        console.log(props.fl);
         return;
     }
 
@@ -30,7 +30,7 @@ function Lista(props) {
             <TouchableOpacity style={styles.deleteButton}
                 onPress={() => {
                     deleteItem(props.id);
-                    props.flag(false);
+                    return;
                 }}>
                 <Feather name='trash-2' size={20} color={'#fff'} />
             </TouchableOpacity>
@@ -40,141 +40,169 @@ function Lista(props) {
 
 export default function Form() {
 
-    const [altura, setAltura] = useState(0);
-    const [newAltura, setNewAltura] = useState('');
-    const [peso, setPeso] = useState(null);
-    const [pesoInput, setPesoInput] = useState('');
-    const [flag, setFlag] = useState(false);
-    const [items, setItems] = useState([]);
-
-
-    useEffect(() => {
-        async function getPeso() {
-            const response = await AsyncStorage.getItem('peso');
-            const pes = JSON.parse(response);
-            if (pes !== null) {
-                try {
-                    setPesoInput(pes.peso);
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-        }
-        getPeso();
-    }, [])
-
     useEffect(() => {
         async function getAltura() {
-            const response = await AsyncStorage.getItem('altura');
-            const alt = JSON.parse(response);
-            if (alt !== null) {
-                try {
-                    setAltura(alt.altura);
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-        }
-        getAltura();
-    }, []);
-
-    useEffect(() => {
-        async function saveAltura() {
-            try {
-                const alt = { id: new Date().getTime(), altura: altura };
-                AsyncStorage.setItem('altura', JSON.stringify(alt));
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        saveAltura();
-    }, [altura]);
-
-    useEffect(() => {
-        async function savePeso() {
-            let response = fetch('http://192.168.2.124:3000/savePeso', {
+            let userDados = await AsyncStorage.getItem('userData');
+            userDados = JSON.parse(userDados);
+            const reqs = await fetch('http://192.168.2.124:3000/getUser', {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    valor: peso
+                    id: userDados.id
                 })
             });
+            let json = await reqs.json();
+            if (json.altura !== null) {
+                setAltura(json.altura)
+                setPeso(json.peso);
+                setAlturaText(json.altura);
+            }
         }
-        savePeso();
-    }, [peso]);
+        getAltura();
+    }, []);
+
+
+    const [altura, setAltura] = useState(null);
+    const [altura_v, setAltura_v] = useState(null);
+    const [alturaText, setAlturaText] = useState('');
+    const [alturaInput, setalturaInput] = useState(null);
+    const [peso, setPeso] = useState(null);
+    const [new_peso, setNew_peso] = useState(null);
+    const [pesoInput, setPesoInput] = useState('');
+    const [items, setItems] = useState([]);
+    const [flag, setFlag] = useState(false);
+    const [flag_a, setFlag_a] = useState(false);
+    
+    async function getItems() {
+        let userDados = await AsyncStorage.getItem('userData');
+        userDados = JSON.parse(userDados);
+        const reqs = await fetch('http://192.168.2.124:3000/getPesos', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: userDados.id
+            })
+        });
+        const pesos = await reqs.json();
+        console.log(flag);
+        return pesos;
+    }
 
 
     useEffect(() => {
-        getItems().then(items => setItems(items));
-    }, [flag]);
+        async function saveAltura() {
+            let userDados = await AsyncStorage.getItem('userData');
+            userDados = JSON.parse(userDados);
+            const imc = peso / (altura * altura);
+            await fetch('http://192.168.2.124:3000/editAlt', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: userDados.id,
+                    altura: altura_v,
+                    imc: imc
+                })
+            });
+        }
+        if (altura_v !== null) {
+            saveAltura();
+        }
+    }, [altura_v]);
 
+    useEffect(() => {
+        getItems().then((iten) => { setItems(iten); });
+    }, [flag])
 
-    async function getItems() {
-        return await AsyncStorage.getItem('pesos')
-            .then(response => {
-                if (response)
-                    return Promise.resolve(JSON.parse(response));
-                else
-                    return Promise.resolve([]);
-            })
-    }
+    useEffect(() => {
+        async function savePeso() {
+            let userDados = await AsyncStorage.getItem('userData');
+            userDados = JSON.parse(userDados);
+            const imc = peso / (altura * altura);
+            await fetch('http://192.168.2.124:3000/editPeso', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: userDados.id,
+                    peso: peso,
+                    imc: imc
+                })
+            });
+        }
 
-    async function Adicionar() {
-        const listItem = { id: new Date().getTime(), peso: Number(peso) };
-        let savedItems = [];
-        const response = await AsyncStorage.getItem('pesos');
+        async function addPeso() {
 
-        if (response) savedItems = JSON.parse(response);
-        savedItems.push(listItem);
+            let userDados = await AsyncStorage.getItem('userData');
+            userDados = JSON.parse(userDados);
+            await fetch('http://192.168.2.124:3000/addPeso', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    valor: peso,
+                    userId: userDados.id,
+                })
+            });
+        }
+        if (new_peso !== null) {
+            savePeso();
+            addPeso();
+        }
+    }, [new_peso])
 
-        await AsyncStorage.setItem('pesos', JSON.stringify(savedItems));
-        setFlag(true);
-    }
 
 
 
 
     async function validateEdit() {
 
-        if (newAltura.length > 0) {
+        if (alturaInput.length > 0) {
             let aux = '';
-            for (let index = 0; index < newAltura.length; index++) {
-                if (newAltura[index] === ',') {
+            for (let index = 0; index < alturaInput.length; index++) {
+                if (alturaInput[index] === ',') {
                     aux += '.';
                 } else {
-                    aux += newAltura[index];
+                    aux += alturaInput[index];
                 }
             }
             let n = Number(aux);
             setAltura(n);
-            setNewAltura('');
+            setAlturaText(n);
+            setAltura_v(n);
+            setalturaInput('');
             Keyboard.dismiss();
         } else {
             alert("Por favor preencha o campo corretamente!");
         }
     }
 
-    function validateEditPeso() {
-        let aux = '';
-        for (let index = 0; index < pesoInput.length; index++) {
-            if (pesoInput[index] === ',') {
-                aux += '.';
-            } else {
-                aux += pesoInput[index];
-            }
-        }
-        return setPeso(Number(aux));
-    }
 
     function adicionaPeso() {
 
         if (pesoInput.length > 0) {
-            validateEditPeso();
-            Adicionar();
-            setFlag(false);
+            let aux = '';
+            for (let index = 0; index < pesoInput.length; index++) {
+                if (pesoInput[index] === ',') {
+                    aux += '.';
+                } else {
+                    aux += pesoInput[index];
+                }
+            }
+            setPeso(Number(aux));
+            setNew_peso(Number(aux));
             setPesoInput('');
             Keyboard.dismiss();
 
@@ -183,61 +211,61 @@ export default function Form() {
         }
     }
 
+    return (
+        <View style={styles.formContext} behavior="position" enabled>
+            <View style={styles.boxTitle}>
+                <Text style={styles.textTitle}>Dados</Text>
+            </View>
+            <View style={styles.form}>
+                <View>
+                    <Text style={styles.lableText}>{`Altura Atual: ${alturaText}`}</Text>
+                </View>
+                <View style={styles.alturaArea}>
+                    <TextInput
+                        style={styles.inputTextEdit}
+                        value={alturaInput}
+                        keyboardType="numeric"
+                        onChangeText={setalturaInput}
+                    />
+                    <TouchableOpacity
+                        style={styles.btnAltura}
+                        onPress={() => validateEdit()}
+                    >
+                        <Text style={styles.textButtonCalcu}>Editar</Text>
+                    </TouchableOpacity>
+                </View>
 
-    return ( 
-            <View style={styles.formContext} behavior="position" enabled>
-                <View style={styles.boxTitle}>
-                    <Text style={styles.textTitle}>Dados</Text>
+                <Text style={styles.lableTextPeso}>Adicionar Peso</Text>
+                <View style={styles.pesoArea}>
+                    <TextInput
+                        style={styles.inputTextPeso}
+                        onChangeText={setPesoInput}
+                        value={pesoInput}
+                        keyboardType="numeric"
+                    />
+                    <TouchableOpacity
+                        style={styles.btnPeso}
+                        onPress={() => {
+                            adicionaPeso();
+                            flag ? setFlag(false) : setFlag(true);
+                            setFlag_a(flag);
+                        }}
+                    >
+                        <Text style={styles.textButtonCalcu}>Adicionar</Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.form}>
-                    <View>
-                        <Text style={styles.lableText}>Altura Atual: {altura}</Text>
-                    </View>
-                    <View style={styles.alturaArea}>
-                        <TextInput
-                            style={styles.inputTextEdit}
-                            value={newAltura}
-                            keyboardType="numeric"
-                            onChangeText={setNewAltura}
-                        />
-                        <TouchableOpacity
-                            style={styles.btnAltura}
-                            onPress={() => validateEdit()}
-                        >
-                            <Text style={styles.textButtonCalcu}>Editar</Text>
-                        </TouchableOpacity>
-                    </View>
+            </View>
+            <View style={{ width: '90%', height: '35%', marginTop: 10, alignItems: 'center' }}>
+                <ScrollView
+                    style={styles.scrollContainer}
+                    contentContainerStyle={styles.itemsContainer}>
+                    {items.length > 0 ? items.map((item) => {
+                        return <Lista key={item.id} id={item.id} item={item.valor} att={setFlag} fl={flag_a} />
+                    }) : ''}
+                </ScrollView>
+            </View>
+        </View >
 
-                    <Text style={styles.lableTextPeso}>Adicionar Peso</Text>
-                    <View style={styles.pesoArea}>
-                        <TextInput
-                            style={styles.inputTextPeso}
-                            onChangeText={setPesoInput}
-                            value={pesoInput}
-                            placeholder={`${pesoInput}`}
-                            keyboardType="numeric"
-                        />
-                        <TouchableOpacity
-                            style={styles.btnPeso}
-                            onPress={() => {
-                                adicionaPeso();
-                            }}
-                        >
-                            <Text style={styles.textButtonCalcu}>Adicionar</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={{ width: '90%', height: '35%', marginTop: 10, alignItems: 'center' }}>
-                    <ScrollView
-                        style={styles.scrollContainer}
-                        contentContainerStyle={styles.itemsContainer}>
-                        {items.map(item => {
-                            return <Lista key={item.id} id={item.id} item={item.peso} flag={setFlag} />
-                        })}
-                    </ScrollView>
-                </View>
-            </View >
-       
     );
 }
 
@@ -356,6 +384,7 @@ const styles = StyleSheet.create({
     scrollContainer: {
         flex: 1,
         width: '90%',
+        borderRadius: 7,
     },
     itemsContainer: {
         borderTopLeftRadius: 10,
