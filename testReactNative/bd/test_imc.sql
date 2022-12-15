@@ -16,48 +16,14 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `pesos`
---
-
-DROP TABLE IF EXISTS `pesos`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `pesos` (
-  `id` int(11) NOT NULL,
-  `userId` int(11) DEFAULT NULL,
-  `valor` float DEFAULT NULL,
-  `altura` float DEFAULT NULL,
-  `imc` float DEFAULT NULL,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `userId` (`userId`),
-  CONSTRAINT `pesos_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `pesos`
 --
 
 LOCK TABLES `pesos` WRITE;
 /*!40000 ALTER TABLE `pesos` DISABLE KEYS */;
+INSERT INTO `pesos` VALUES (92,14,1,'2022-12-14 02:42:33','2022-12-14 02:42:33'),(93,15,1,'2022-12-14 02:42:37','2022-12-14 02:42:37'),(94,18,1,'2022-12-14 03:17:57','2022-12-14 03:17:57'),(95,20,1,'2022-12-14 03:18:01','2022-12-14 03:18:01'),(96,87,1,'2022-12-14 15:24:43','2022-12-14 15:24:43'),(97,89,1,'2022-12-14 15:25:01','2022-12-14 15:25:01'),(98,89,1,'2022-12-14 21:08:26','2022-12-14 21:08:26'),(99,90,1,'2022-12-14 21:08:39','2022-12-14 21:08:39'),(100,100,1,'2022-12-14 21:08:44','2022-12-14 21:08:44'),(101,101,1,'2022-12-14 21:23:21','2022-12-14 21:23:21'),(102,102,1,'2022-12-14 21:23:39','2022-12-14 21:23:39'),(103,103,1,'2022-12-14 21:34:48','2022-12-14 21:34:48'),(104,101,1,'2022-12-14 21:34:49','2022-12-14 21:34:49'),(105,102,1,'2022-12-14 21:34:49','2022-12-14 21:34:49'),(106,102,1,'2022-12-14 21:35:05','2022-12-14 21:35:05'),(107,101,1,'2022-12-14 21:35:05','2022-12-14 21:35:05'),(108,88,1,'2022-12-14 21:40:23','2022-12-14 21:40:23'),(109,89,1,'2022-12-14 21:40:41','2022-12-14 21:40:41');
 /*!40000 ALTER TABLE `pesos` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `sequelizemeta`
---
-
-DROP TABLE IF EXISTS `sequelizemeta`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `sequelizemeta` (
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`name`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `sequelizemeta`
@@ -65,28 +31,9 @@ CREATE TABLE `sequelizemeta` (
 
 LOCK TABLES `sequelizemeta` WRITE;
 /*!40000 ALTER TABLE `sequelizemeta` DISABLE KEYS */;
-INSERT INTO `sequelizemeta` VALUES ('20221128195319-create-user.js'),('20221207180212-create-peso.js');
+INSERT INTO `sequelizemeta` VALUES ('20221128195319-create-user.js'),('20221212143739-create-peso.js');
 /*!40000 ALTER TABLE `sequelizemeta` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `users`
---
-
-DROP TABLE IF EXISTS `users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `data` varchar(255) DEFAULT NULL,
-  `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `users`
@@ -94,7 +41,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (12,'christian','123456','c@email.com','21052002','2022-11-29 14:58:58','2022-11-29 14:58:58'),(14,'c','123456','c@email.com','21052002','2022-11-29 23:12:37','2022-11-29 23:12:37'),(32,'c','123456','c@email.com','1245555555','2022-11-29 23:41:21','2022-11-29 23:41:21'),(33,'c','11111111','','201144555','2022-11-29 23:42:34','2022-11-29 23:42:34');
+INSERT INTO `users` VALUES (1,'eu','$2b$10$DGPbDpcQ7aADmjNg4Bb/R.4YoOKQjfVye.4pWHbG/d9oiYWDGaxXW','eu@email.com','01-01-2000',1.77,89.8,28.6635,'2022-12-12 14:45:43','2022-12-14 21:41:03');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -107,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-07 16:12:27
+-- Dump completed on 2022-12-14 23:24:04

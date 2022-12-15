@@ -19,7 +19,7 @@ function Lista(props) {
                 id: id
             })
         });
-        props.att();
+        //props.att();
         return;
     }
 
@@ -58,7 +58,7 @@ export default function Form() {
                 setAltura(json.altura)
                 setPeso(json.peso);
                 setAlturaText(json.altura);
-                getItems().then((itens)=>{setItems(itens)});
+                //getItems().then((itens)=>{setItems(itens)});
             }
         }
         getAltura();
@@ -73,7 +73,7 @@ export default function Form() {
     const [new_peso, setNew_peso] = useState(null);
     const [pesoInput, setPesoInput] = useState('');
     const [items, setItems] = useState([]);
-    const [flag, setFlag] = useState(false);
+    //const [flag, setFlag] = useState(false);
 
     async function getItems() {
         let userDados = await AsyncStorage.getItem('userData');
@@ -115,12 +115,14 @@ export default function Form() {
             saveAltura();
         }
     }, [altura_v]);
-/*
+
+    /*
     useEffect(() => {
         getItems().then((iten) => { setItems(iten); });
     }, [flag])*/
 
     useEffect(() => {
+
         async function savePeso() {
             let userDados = await AsyncStorage.getItem('userData');
             userDados = JSON.parse(userDados);
@@ -155,10 +157,12 @@ export default function Form() {
                 })
             });
         }
+
         if (new_peso !== null) {
             savePeso();
             addPeso();
         }
+        
     }, [new_peso])
 
 
@@ -245,7 +249,7 @@ export default function Form() {
                         style={styles.btnPeso}
                         onPress={() => {
                             adicionaPeso();
-                            getItems().then((itens)=>{setItems(itens)});
+                            //getItems().then((itens)=>{setItems(itens)});
                         }}
                     >
                         <Text style={styles.textButtonCalcu}>Adicionar</Text>
