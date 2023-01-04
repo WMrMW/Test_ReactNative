@@ -16,33 +16,60 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `pesos`
+-- Table structure for table `peso`
 --
 
-LOCK TABLES `pesos` WRITE;
-/*!40000 ALTER TABLE `pesos` DISABLE KEYS */;
-INSERT INTO `pesos` VALUES (92,14,1,'2022-12-14 02:42:33','2022-12-14 02:42:33'),(93,15,1,'2022-12-14 02:42:37','2022-12-14 02:42:37'),(94,18,1,'2022-12-14 03:17:57','2022-12-14 03:17:57'),(95,20,1,'2022-12-14 03:18:01','2022-12-14 03:18:01'),(96,87,1,'2022-12-14 15:24:43','2022-12-14 15:24:43'),(97,89,1,'2022-12-14 15:25:01','2022-12-14 15:25:01'),(98,89,1,'2022-12-14 21:08:26','2022-12-14 21:08:26'),(99,90,1,'2022-12-14 21:08:39','2022-12-14 21:08:39'),(100,100,1,'2022-12-14 21:08:44','2022-12-14 21:08:44'),(101,101,1,'2022-12-14 21:23:21','2022-12-14 21:23:21'),(102,102,1,'2022-12-14 21:23:39','2022-12-14 21:23:39'),(103,103,1,'2022-12-14 21:34:48','2022-12-14 21:34:48'),(104,101,1,'2022-12-14 21:34:49','2022-12-14 21:34:49'),(105,102,1,'2022-12-14 21:34:49','2022-12-14 21:34:49'),(106,102,1,'2022-12-14 21:35:05','2022-12-14 21:35:05'),(107,101,1,'2022-12-14 21:35:05','2022-12-14 21:35:05'),(108,88,1,'2022-12-14 21:40:23','2022-12-14 21:40:23'),(109,89,1,'2022-12-14 21:40:41','2022-12-14 21:40:41');
-/*!40000 ALTER TABLE `pesos` ENABLE KEYS */;
+DROP TABLE IF EXISTS `peso`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `peso` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `valor` float NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `peso_ibfk_1` (`user_id`),
+  CONSTRAINT `peso_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `peso`
+--
+
+LOCK TABLES `peso` WRITE;
+/*!40000 ALTER TABLE `peso` DISABLE KEYS */;
+INSERT INTO `peso` VALUES (10,98,2);
+/*!40000 ALTER TABLE `peso` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Dumping data for table `sequelizemeta`
+-- Table structure for table `user`
 --
 
-LOCK TABLES `sequelizemeta` WRITE;
-/*!40000 ALTER TABLE `sequelizemeta` DISABLE KEYS */;
-INSERT INTO `sequelizemeta` VALUES ('20221128195319-create-user.js'),('20221212143739-create-peso.js');
-/*!40000 ALTER TABLE `sequelizemeta` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(50) NOT NULL,
+  `senha` varchar(15) NOT NULL,
+  `email` varchar(30) NOT NULL,
+  `data_nasc` varchar(12) NOT NULL,
+  `altura` float DEFAULT NULL,
+  `peso` float DEFAULT NULL,
+  `imc` float DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `user`
 --
 
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'eu','$2b$10$DGPbDpcQ7aADmjNg4Bb/R.4YoOKQjfVye.4pWHbG/d9oiYWDGaxXW','eu@email.com','01-01-2000',1.77,89.8,28.6635,'2022-12-12 14:45:43','2022-12-14 21:41:03');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'admin','admin','admin','admin',1,1,1),(2,'eu','eu','eu@email.com','12/12/1212',1.78,98,30.9304);
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -54,4 +81,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-14 23:24:04
+-- Dump completed on 2023-01-03 18:33:19

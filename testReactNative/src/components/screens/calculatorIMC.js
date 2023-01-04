@@ -19,7 +19,7 @@ function Lista(props) {
                 id: id
             })
         });
-        //props.att();
+        props.att();
         return;
     }
 
@@ -58,7 +58,7 @@ export default function Form() {
                 setAltura(json.altura)
                 setPeso(json.peso);
                 setAlturaText(json.altura);
-                //getItems().then((itens)=>{setItems(itens)});
+                getItems().then((itens)=>{setItems(itens)});
             }
         }
         getAltura();
@@ -73,7 +73,6 @@ export default function Form() {
     const [new_peso, setNew_peso] = useState(null);
     const [pesoInput, setPesoInput] = useState('');
     const [items, setItems] = useState([]);
-    //const [flag, setFlag] = useState(false);
 
     async function getItems() {
         let userDados = await AsyncStorage.getItem('userData');
@@ -97,6 +96,7 @@ export default function Form() {
         async function saveAltura() {
             let userDados = await AsyncStorage.getItem('userData');
             userDados = JSON.parse(userDados);
+            console.log("Id do asuncStorage : "+userDados.id);
             const imc = peso / (altura * altura);
             await fetch(`${config.urlRoot}editAlt`, {
                 method: 'POST',
@@ -110,22 +110,22 @@ export default function Form() {
                     imc: imc
                 })
             });
+            console.log("Passou do fetch edit altura");
         }
         if (altura_v !== null) {
+            console.log("Chamada das consultas do edit altura");
             saveAltura();
         }
     }, [altura_v]);
 
-    /*
-    useEffect(() => {
-        getItems().then((iten) => { setItems(iten); });
-    }, [flag])*/
+
 
     useEffect(() => {
 
         async function savePeso() {
             let userDados = await AsyncStorage.getItem('userData');
             userDados = JSON.parse(userDados);
+            console.log("Id do asuncStorage : "+userDados.id);
             const imc = peso / (altura * altura);
             await fetch(`${config.urlRoot}editPeso`, {
                 method: 'POST',
@@ -139,6 +139,7 @@ export default function Form() {
                     imc: imc
                 })
             });
+            console.log("Passou do fetch peso"); 
         }
 
         async function addPeso() {
@@ -159,6 +160,7 @@ export default function Form() {
         }
 
         if (new_peso !== null) {
+            console.log("Chamada Das consultas de edit peso");
             savePeso();
             addPeso();
         }
@@ -249,7 +251,7 @@ export default function Form() {
                         style={styles.btnPeso}
                         onPress={() => {
                             adicionaPeso();
-                            //getItems().then((itens)=>{setItems(itens)});
+                            getItems().then((itens)=>{setItems(itens)});
                         }}
                     >
                         <Text style={styles.textButtonCalcu}>Adicionar</Text>
