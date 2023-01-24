@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import MyTabs from "./principal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import config from '../../../config/config.json';
 
