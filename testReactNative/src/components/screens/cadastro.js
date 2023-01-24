@@ -19,6 +19,8 @@ export default function Cadastro() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [dataNasc, setDataNasc] = useState('');
+    const [peso, setpeso] = useState('');
+    const [altura, setaltura] = useState('');
     const [message, setmessageee] = useState('');
 
     const [messageErrorNome, setmessageErrorNome] = useState(false);
@@ -31,6 +33,12 @@ export default function Cadastro() {
 
     const [messageErrorSenhaNulo, setmessageErrorSenhaNulo] = useState(false);
     const [messageErrorSenha, setmessageErrorSenha] = useState(false);
+
+    const [messageErroralturaNulo, setmessageErroralturaNulo] = useState(false);
+    const [messageErroraltura, setmessageErroraltura] = useState(false);
+    
+    const [messageErrorpesoNulo, setmessageErrorpesoNulo] = useState(false);
+    const [messageErrorpeso, setmessageErrorpeso] = useState(false);
 
     const navigationimc = useNavigation();
  
@@ -104,6 +112,25 @@ export default function Cadastro() {
                 }else{
                     setmessageErrorSenha(false)
                 }
+
+
+                //validation altura
+                if(altura.trim() === ''){
+                    setmessageErroralturaNulo(true);
+                    errorvalidation = true;
+                }
+                else{
+                    setmessageErroralturaNulo(false)
+                }
+
+               //validation peso
+               if(peso.trim() === ''){
+                setmessageErrorpesoNulo(true);
+                errorvalidation = true;
+               }
+               else{
+                setmessageErrorpesoNulo(false)
+               }
 
                 return !errorvalidation;
 }
@@ -253,7 +280,58 @@ export default function Cadastro() {
                                 <Text style={styles.messageErrorCadastro}>A senha deve ter pelo menos 6 digitos</Text>
                             )}
                             {errors.senha &&  <Text style = {styles.labelError}>{errors.senha?.message}</Text>}
+                            
+                            <Text style={styles.textCamp}>Altura</Text>
+                            <Controller
+                                control={control}
+                                name = "altura"
+                                render={({field: {onChange, onBlur,value} }) => (
+                                    <TextInput 
+                                    secureTextEntry={true} 
+                                    style={[styles.textInput,
+                                    {borderWidth: errors.altura && 1,
+                                    borderColor: errors.altura && '#ff375b'}]}
+                                    onChangeText={text=>setaltura(text)}
+                                    onBlur={onBlur}
+                                    value ={value}
+                                    keyboardType = "numbers-and-punctuation"
+                                    placeholder= " Digite sua altura"
+                                    />
+                                )}
+                            />
+                            {messageErroralturaNulo && (
+                                <Text style={styles.messageErrorCadastro}>Informe sua altura</Text>
+                            )}
+                            {messageErroraltura && (
+                                <Text style={styles.messageErrorCadastro}>A altura deve ser no formato 1.75</Text>
+                            )}
+                            {errors.altura &&  <Text style = {styles.labelError}>{errors.altura?.message}</Text>}
 
+                            <Text style={styles.textCamp}>Peso</Text>
+                            <Controller
+                                control={control}
+                                name = "peso"
+                                render={({field: {onChange, onBlur,value} }) => (
+                                    <TextInput 
+                                    secureTextEntry={true} 
+                                    style={[styles.textInput,
+                                    {borderWidth: errors.peso && 1,
+                                    borderColor: errors.peso && '#ff375b'}]}
+                                    onChangeText={text=>setpeso(text)}
+                                    onBlur={onBlur}
+                                    value ={value}
+                                    keyboardType = "numbers-and-punctuation"
+                                    placeholder= " Digite seu peso"
+                                    />
+                                )}
+                            />
+                            {messageErrorpesoNulo && (
+                                <Text style={styles.messageErrorCadastro}>Informe sua peso</Text>
+                            )}
+                            {messageErrorpeso && (
+                                <Text style={styles.messageErrorCadastro}>O peso deve ser no formato numerico</Text>
+                            )}
+                            {errors.peso &&  <Text style = {styles.labelError}>{errors.peso?.message}</Text>}
 
                         </View>
                         <View style={styles.btnArea}>
