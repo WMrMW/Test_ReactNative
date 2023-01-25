@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import model.Peso;
 import model.User;
 
 /**
@@ -35,9 +36,12 @@ public class UserDAO {
         preparedStatement.setFloat(6, usuario.getPeso());
         preparedStatement.setFloat(7, usuario.getImc());
         preparedStatement.execute();
+        User user_new = getUserPorEmaileSenha(usuario);
+        PesoDAO pesodao = new PesoDAO(conexao);
+        pesodao.insertSemAtualizarUser(new Peso(usuario.getPeso(), user_new.getId()));
     }
 
-    public User verificaExistenciaPorEmaileSenha(User usuario) throws SQLException {
+    public User getUserPorEmaileSenha(User usuario) throws SQLException {
         String sql = "select * from user where email = ? and senha = ?";
         PreparedStatement preparedStatement = conexao.prepareStatement(sql);
         preparedStatement.setString(1, usuario.getEmail());
@@ -73,10 +77,22 @@ public class UserDAO {
         ArrayList<User> usuarios = new ArrayList<>();
         preparedStatement.execute();
         ResultSet resultSet = preparedStatement.getResultSet();
-        if(resultSet.next()){
-            
+        while(resultSet.next()){
+             usuarios.add(new User(resultSet.getInt("id"), resultSet.getString("nome"), resultSet.getString("email"), resultSet.getString("senha"), resultSet.getString("data_nasc"), resultSet.getFloat("altura"), resultSet.getFloat("peso"), resultSet.getFloat("imc")));
         }
-
+        return usuarios;
+    }
+    
+    public User getUserPorId(int id) throws SQLException{
+        String sql = "select * from user where id = ?";
+        PreparedStatement preparedStatement = conexao.prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        preparedStatement.execute();
+        ResultSet resultSet = preparedStatement.getResultSet();
+        if(resultSet.next()){
+            return new User(resultSet.getInt("id"), resultSet.getString("nome"), resultSet.getString("email"), resultSet.getString("senha"), resultSet.getString("data_nasc"), resultSet.getFloat("altura"), resultSet.getFloat("peso"), resultSet.getFloat("imc"));
+        }
+        return null;
     }
 
     public void updateAltura(User usuario) throws SQLException {

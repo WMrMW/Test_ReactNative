@@ -2,10 +2,7 @@
 package model;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
 
 
 
@@ -39,6 +36,15 @@ public class User implements Serializable {
         this.altura = altura;
         this.peso = peso;
         this.imc = imc;
+    }
+    public User(int id, String nome, String email, String senha, String data_Nasc, float altura, float peso) {
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+        this.data_Nasc = data_Nasc;
+        this.altura = altura;
+        this.peso = peso;
     }
 
     public User(int id) {
@@ -124,5 +130,10 @@ public class User implements Serializable {
 
     public void setImc(float imc) {
         this.imc = imc;
+    }
+
+    public void atualizaIMC() {
+        float imc_new = this.peso/(this.altura*this.altura);
+        this.imc = imc_new;
     }
 }
