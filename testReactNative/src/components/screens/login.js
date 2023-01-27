@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import config from '../../../config/config.json';
-
+import LocalHost from '../../../LocalHost';
 
 import * as Animatable from 'react-native-animatable';
 
@@ -15,21 +14,18 @@ export default function Login({ navigation }) {
 
   const navigationimc = useNavigation();
 
+
   async function fnLogin() {
-    const reqs = await fetch(`${config.urlRoot}login`, {
-      method: 'POST',
+    const response = await fetch(`http://${LocalHost.address}:${LocalHost.port}/IMC/webresources/generic/User/login/${emailLogin}/${senhaLogin}`, {
+      method: 'GET',
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: emailLogin,
-        password: senhaLogin
-      })
+        'Content-Type': 'application/json',
+      }
     });
-    let json = await reqs.json();
-    if (json === 'Erro: Usuário ou senha incorretos!') {
-      setmessageee(json);
+    let json = await response.json();
+    if (json === null) {
+      setmessageee('Erro: Usuário ou senha incorretos!');
       setTimeout(() => {
         setmessageee('');
       }, 5000)
@@ -41,7 +37,7 @@ export default function Login({ navigation }) {
   }
 
   return (
-    <ScrollView>
+    
       <View style={styles.container}>
         <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>
           <Text style={styles.message}>Bem-vindo(a)</Text>
@@ -83,7 +79,6 @@ export default function Login({ navigation }) {
 
         </Animatable.View>
       </View>
-    </ScrollView>
   );
 }
 

@@ -4,8 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'rea
 import Grafic from '../grafic/index';
 import { CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import config from '../../../config/config.json';
-
+import LocalHost from '../../../LocalHost';
 
 
 export default function Home() {
@@ -23,17 +22,14 @@ export default function Home() {
     async function getUserDados() {
       let userDados = await AsyncStorage.getItem('userData');
       userDados = JSON.parse(userDados);
-      const reqs = await fetch(`${config.urlRoot}getUser`, {
-        method: 'POST',
+      const response = await fetch(`http://${LocalHost.address}:${LocalHost.port}/IMC/webresources/generic/User/getUser/${userDados.id}`, {
+        method: 'GET',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          id: userDados.id
-        })
+          'Content-Type': 'application/json',
+        }
       });
-      let json = await reqs.json();
+      let json = await response.json();
       if (json.imc !== null && json.altura !== null && json.peso !== null) {
         setAltura(json.altura);
         setPeso(json.peso);
@@ -104,7 +100,7 @@ export default function Home() {
         >{flag ? `Com a classificação de : ${message}` : ''}</Text>
       </View>
       <View style={styles.graficArea}>
-        <Grafic />
+        {isFocused ? <Grafic/> : ''}
       </View>
     </View>
   );

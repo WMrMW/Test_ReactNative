@@ -3,18 +3,18 @@ import { Keyboard, ScrollView, StatusBar, TouchableWithoutFeedback } from "react
 import { Text, TextInput, View, StyleSheet, Image, KeyboardAvoidingView, Platform, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
-import config from "../../../config/config.json"
+import LocalHost from "../../../LocalHost";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 
 import * as Animatable from 'react-native-animatable';
 
-
+let bcrypt = require('bcryptjs');
 
 
 export default function Cadastro() {
-    
+
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
@@ -36,20 +36,20 @@ export default function Cadastro() {
 
     const [messageErroralturaNulo, setmessageErroralturaNulo] = useState(false);
     const [messageErroraltura, setmessageErroraltura] = useState(false);
-    
+
     const [messageErrorpesoNulo, setmessageErrorpesoNulo] = useState(false);
     const [messageErrorpeso, setmessageErrorpeso] = useState(false);
 
     const navigationimc = useNavigation();
- 
-   const schema = yup.object({
+
+    const schema = yup.object({
         nome: yup.string().required("Informe seu nome"),
         email: yup.string().email("Email invalido").required("Informe seu email"),
-        dataNasc : yup.date("Data invalida").required("Informe sua data de nascimento"),
-        senha : yup.string().min(6, "A senha deve ter pelo menos 6 digitos").required("Informe seu nome"), 
+        dataNasc: yup.date("Data invalida").required("Informe sua data de nascimento"),
+        senha: yup.string().min(6, "A senha deve ter pelo menos 6 digitos").required("Informe seu nome"),
     })
 
-    const { control, handleSubmit , formState: {errors}} = useForm({
+    const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
 
@@ -57,297 +57,312 @@ export default function Cadastro() {
     const validar = () => {
 
         const email_validation = new RegExp("^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$")
-        const date_validation =  new RegExp("^(0[1-9]|[12][0-9]|3[01])[- / ](0[1-9]|1[012])[- / ][12][0-9]{3}$")
+        const date_validation = new RegExp("^(0[1-9]|[12][0-9]|3[01])[- / ](0[1-9]|1[012])[- / ][12][0-9]{3}$")
         let errorvalidation = false;
 
-                //validation nome
-                if(nome.trim() === ''){
-                 setmessageErrorNome(true);
-                 errorvalidation = true;
-                }else{
-                 setmessageErrorNome(false)
-                }
+        //validation nome
+        if (nome.trim() === '') {
+            setmessageErrorNome(true);
+            errorvalidation = true;
+        } else {
+            setmessageErrorNome(false)
+        }
 
-                //validation email
-                if(email.trim() === ''){
-                    setmessageErrorEmailNulo(true);
-                    errorvalidation = true;
-                }else{
-                    setmessageErrorEmailNulo(false)
-                }
-                if(!email_validation.test(email)){
-                    setmessageErrorEmail(true);
-                    errorvalidation = true;
-                }else{
-                    setmessageErrorEmail(false)
-                }
+        //validation email
+        if (email.trim() === '') {
+            setmessageErrorEmailNulo(true);
+            errorvalidation = true;
+        } else {
+            setmessageErrorEmailNulo(false)
+        }
+        if (!email_validation.test(email)) {
+            setmessageErrorEmail(true);
+            errorvalidation = true;
+        } else {
+            setmessageErrorEmail(false)
+        }
 
-                //validation date
-                
-                if(dataNasc.trim() === ''){
-                    setmessageErrorDateNulo(true);
-                    errorvalidation = true;
-                }else{
-                    setmessageErrorDateNulo(false)
-                }
-                if(!date_validation.test(dataNasc)){
-                    setmessageErrorDate(true);
-                    errorvalidation = true;
-                }else{
-                    setmessageErrorDate(false)
-                }
+        //validation date
 
-
-                //validation senha
-                if(senha.trim() === ''){
-                    setmessageErrorSenhaNulo(true);
-                    errorvalidation = true;
-                }
-                else{
-                    setmessageErrorSenhaNulo(false)
-                }
-                if(senha.trim().length < 6){
-                    setmessageErrorSenha(true);
-                    errorvalidation = true;
-                }else{
-                    setmessageErrorSenha(false)
-                }
+        if (dataNasc.trim() === '') {
+            setmessageErrorDateNulo(true);
+            errorvalidation = true;
+        } else {
+            setmessageErrorDateNulo(false)
+        }
+        if (!date_validation.test(dataNasc)) {
+            setmessageErrorDate(true);
+            errorvalidation = true;
+        } else {
+            setmessageErrorDate(false)
+        }
 
 
-                //validation altura
-                if(altura.trim() === ''){
-                    setmessageErroralturaNulo(true);
-                    errorvalidation = true;
-                }
-                else{
-                    setmessageErroralturaNulo(false)
-                }
+        //validation senha
+        if (senha.trim() === '') {
+            setmessageErrorSenhaNulo(true);
+            errorvalidation = true;
+        }
+        else {
+            setmessageErrorSenhaNulo(false)
+        }
+        if (senha.trim().length < 6) {
+            setmessageErrorSenha(true);
+            errorvalidation = true;
+        } else {
+            setmessageErrorSenha(false)
+        }
 
-               //validation peso
-               if(peso.trim() === ''){
-                setmessageErrorpesoNulo(true);
-                errorvalidation = true;
-               }
-               else{
-                setmessageErrorpesoNulo(false)
-               }
 
-                return !errorvalidation;
-}
-   const salvar = ()=>{
-    if(validar()){
-        fnCadastrar();
+        //validation altura
+        if (altura.trim() === '') {
+            setmessageErroralturaNulo(true);
+            errorvalidation = true;
+        }
+        else {
+            setmessageErroralturaNulo(false)
+        }
+
+        //validation peso
+        if (peso.trim() === '') {
+            setmessageErrorpesoNulo(true);
+            errorvalidation = true;
+        }
+        else {
+            setmessageErrorpesoNulo(false)
+        }
+
+        return !errorvalidation;
     }
-   }
+    const salvar = () => {
+        if (validar()) {
+            fnCadastrar();
+        }
+    }
 
-    async function fnCadastrar(){
-        const reqs = await fetch(`${config.urlRoot}cadastro`,{
+    async function fnCadastrar() {
+        const response = await fetch(`http://${LocalHost.address}:${LocalHost.port}/IMC/webresources/generic/User/addUser`, {
             method: 'POST',
-            headers:{
+            headers: {
                 Accept: 'application/json',
-                'Content-Type' : 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                nomeUser: nome,
-                password: senha,
-                email:email,
-                dataUser: dataNasc
+                nome: nome,
+                email: email,
+                senha: senha,
+                data_Nasc: dataNasc,
+                altura: altura,
+                peso: peso
             })
         })
-        let ress = await reqs.json();
-        if(ress === 'Usuário cadastrado com sucesso!'){
-            setmessageee(ress);
-            setTimeout(()=>{
-              setmessageee('');
-            },3000) 
-            setTimeout(()=>{
+        let json = await response.json()
+        if (json === 'Usuário cadastrado com sucesso!') {
+            setmessageee(json);
+            setTimeout(() => {
+                setmessageee('');
+            }, 3000)
+            setTimeout(() => {
                 navigationimc.navigate('Login')
-              },3500)
+            }, 3500)
         }
-       // setmessageee(ress);  
+        setmessageee(json);
+        setTimeout(() => {
+            setmessageee('');
+        }, 3000)
     }
-  
+
 
     return (
         <ScrollView>
             <KeyboardAvoidingView behavior="position" styles={styles.container} enabled>
-            
-                    <Animatable.View>
-                        <View style={styles.titleArea}>
-                            <Text style={styles.textBemVindo}>Crie seu cadastro!</Text>
-                        </View>
 
-                        <View style={styles.formArea}>
-                            {message && (
-                                <Text style={styles.messageErrorLogin}>{message}</Text>
-                            )}
-                            <Text style={styles.textCamp}>Nome</Text>
-                            <Controller
-                                control={control}
-                                name = "nome"
-                                render={({field: { onChange,onBlur,value} }) => (
-                                    <TextInput 
-                                    style={[styles.textInput,
-                                    {borderWidth: errors.name && 1,
-                                    borderColor: errors.name && '#ff375b'}]}
-                                    onChangeText={text=>setNome(text)} 
-                                    onBlur={onBlur}
-                                    value ={value}
-                                    placeholder= " Digite seu nome"
-                                    />
-                                )}
-                            />
-                            {messageErrorNome && (
-                                <Text style={styles.messageErrorCadastro}>Informe seu nome</Text>
-                            )}
+                <Animatable.View>
+                    <View style={styles.titleArea}>
+                        <Text style={styles.textBemVindo}>Crie seu cadastro!</Text>
+                    </View>
 
-                            {errors.name &&  <Text style = {styles.labelError}>{errors.name?.message}</Text>}
-
-                        <Text style={styles.textCamp}>Email</Text> 
-                            <Controller
-                                control={control}
-                                name = "email"
-                                render={({field: {onChange, onBlur,value} }) => (
-                                    <TextInput 
-                                    style={[styles.textInput,
-                                    {borderWidth: errors.email && 1,
-                                    borderColor: errors.email && '#ff375b'}]}
-                                    onChangeText={text=>setEmail(text)} 
-                                    onBlur={onBlur}
-                                    value ={value}
-                                    keyboardType = "email-address"
-                                    placeholder = " Digite seu email"
-                                    />
-                                )}
-                            />
-                            {messageErrorEmailNulo && (
-                                <Text style={styles.messageErrorCadastro}>Informe o email</Text>
-                            )}
-                            {messageErrorEmail && (
-                                <Text style={styles.messageErrorCadastro}>Email inválido</Text>
-                            )}
-
-                        {errors.email &&  <Text style = {styles.labelError}>{errors.email?.message}</Text>}
-
-                            <Text style={styles.textCamp}>Data de Nascimento</Text>
-                            
-                            <Controller
-                                control={control}
-                                name = "dataNasc"
-                                render={({field: { onChange,onBlur,value} }) => (
-                                <TextInput 
-                                style={[styles.textInput,
-                                    {borderWidth: errors.dataNasc && 1,
-                                        borderColor: errors.dataNasc && '#ff375b'}]}
-                                    onChangeText={text=>setDataNasc(text)}
-                                    onBlur={onBlur}
-                                    value ={value}
-                                    keyboardType = "numbers-and-punctuation"
-                                    placeholder= " Ex: 01/01/2001"
-                                    />
-                                )}
-                            />
-                            {messageErrorDate && (
-                                <Text style={styles.messageErrorCadastro}>Data inválida</Text>
-                            )}
-                            {messageErrorDateNulo && (
-                                <Text style={styles.messageErrorCadastro}>Informe sua data de nascimento</Text>
-                            )}
-                            
-                            {errors.dataNasc &&  <Text style = {styles.labelError}>{errors.dataNasc?.message}</Text>}
-
-                            <Text style={styles.textCamp}>Senha</Text>
+                    <View style={styles.formArea}>
+                        {message && (
+                            <Text style={styles.messageErrorLogin}>{message}</Text>
+                        )}
+                        <Text style={styles.textCamp}>Nome</Text>
                         <Controller
-                                control={control}
-                                name = "senha"
-                                render={({field: {onChange, onBlur,value} }) => (
-                                    <TextInput 
-                                    secureTextEntry={true} 
+                            control={control}
+                            name="nome"
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <TextInput
                                     style={[styles.textInput,
-                                    {borderWidth: errors.senha && 1,
-                                    borderColor: errors.senha && '#ff375b'}]}
-                                    onChangeText={text=>setSenha(text)}
+                                    {
+                                        borderWidth: errors.name && 1,
+                                        borderColor: errors.name && '#ff375b'
+                                    }]}
+                                    onChangeText={text => setNome(text)}
                                     onBlur={onBlur}
-                                    value ={value}
-                                    placeholder= " Digite sua senha"
-                                    />
-                                )}
-                            />
-                            {messageErrorSenhaNulo && (
-                                <Text style={styles.messageErrorCadastro}>Informe sua senha</Text>
+                                    value={value}
+                                    placeholder=" Digite seu nome"
+                                />
                             )}
-                            {messageErrorSenha && (
-                                <Text style={styles.messageErrorCadastro}>A senha deve ter pelo menos 6 digitos</Text>
-                            )}
-                            {errors.senha &&  <Text style = {styles.labelError}>{errors.senha?.message}</Text>}
-                            
-                            <Text style={styles.textCamp}>Altura</Text>
-                            <Controller
-                                control={control}
-                                name = "altura"
-                                render={({field: {onChange, onBlur,value} }) => (
-                                    <TextInput 
-                                    secureTextEntry={true} 
-                                    style={[styles.textInput,
-                                    {borderWidth: errors.altura && 1,
-                                    borderColor: errors.altura && '#ff375b'}]}
-                                    onChangeText={text=>setaltura(text)}
-                                    onBlur={onBlur}
-                                    value ={value}
-                                    keyboardType = "numbers-and-punctuation"
-                                    placeholder= " Digite sua altura"
-                                    />
-                                )}
-                            />
-                            {messageErroralturaNulo && (
-                                <Text style={styles.messageErrorCadastro}>Informe sua altura</Text>
-                            )}
-                            {messageErroraltura && (
-                                <Text style={styles.messageErrorCadastro}>A altura deve ser no formato 1.75</Text>
-                            )}
-                            {errors.altura &&  <Text style = {styles.labelError}>{errors.altura?.message}</Text>}
+                        />
+                        {messageErrorNome && (
+                            <Text style={styles.messageErrorCadastro}>Informe seu nome</Text>
+                        )}
 
-                            <Text style={styles.textCamp}>Peso</Text>
-                            <Controller
-                                control={control}
-                                name = "peso"
-                                render={({field: {onChange, onBlur,value} }) => (
-                                    <TextInput 
-                                    secureTextEntry={true} 
-                                    style={[styles.textInput,
-                                    {borderWidth: errors.peso && 1,
-                                    borderColor: errors.peso && '#ff375b'}]}
-                                    onChangeText={text=>setpeso(text)}
-                                    onBlur={onBlur}
-                                    value ={value}
-                                    keyboardType = "numbers-and-punctuation"
-                                    placeholder= " Digite seu peso"
-                                    />
-                                )}
-                            />
-                            {messageErrorpesoNulo && (
-                                <Text style={styles.messageErrorCadastro}>Informe sua peso</Text>
-                            )}
-                            {messageErrorpeso && (
-                                <Text style={styles.messageErrorCadastro}>O peso deve ser no formato numerico</Text>
-                            )}
-                            {errors.peso &&  <Text style = {styles.labelError}>{errors.peso?.message}</Text>}
+                        {errors.name && <Text style={styles.labelError}>{errors.name?.message}</Text>}
 
-                        </View>
-                        <View style={styles.btnArea}>
-                            <TouchableOpacity style={styles.btnCadastro} onPress={salvar}>
-                                <Text style={styles.textbtncadastro}>Cadastrar</Text>
-                            </TouchableOpacity>
-                        <TouchableOpacity
-                        style={styles.buttonregister}
-                        onPress={() => { navigationimc.navigate('Login') }}
-                        >
-                        <Text style={styles.registerText}>Já possui uma conta ? Entre</Text>
+                        <Text style={styles.textCamp}>Email</Text>
+                        <Controller
+                            control={control}
+                            name="email"
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <TextInput
+                                    style={[styles.textInput,
+                                    {
+                                        borderWidth: errors.email && 1,
+                                        borderColor: errors.email && '#ff375b'
+                                    }]}
+                                    onChangeText={text => setEmail(text)}
+                                    onBlur={onBlur}
+                                    value={value}
+                                    keyboardType="email-address"
+                                    placeholder=" Digite seu email"
+                                />
+                            )}
+                        />
+                        {messageErrorEmailNulo && (
+                            <Text style={styles.messageErrorCadastro}>Informe o email</Text>
+                        )}
+                        {messageErrorEmail && (
+                            <Text style={styles.messageErrorCadastro}>Email inválido</Text>
+                        )}
+
+                        {errors.email && <Text style={styles.labelError}>{errors.email?.message}</Text>}
+
+                        <Text style={styles.textCamp}>Data de Nascimento</Text>
+
+                        <Controller
+                            control={control}
+                            name="dataNasc"
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <TextInput
+                                    style={[styles.textInput,
+                                    {
+                                        borderWidth: errors.dataNasc && 1,
+                                        borderColor: errors.dataNasc && '#ff375b'
+                                    }]}
+                                    onChangeText={text => setDataNasc(text)}
+                                    onBlur={onBlur}
+                                    value={value}
+                                    keyboardType="numbers-and-punctuation"
+                                    placeholder=" Ex: 01/01/2001"
+                                />
+                            )}
+                        />
+                        {messageErrorDate && (
+                            <Text style={styles.messageErrorCadastro}>Data inválida</Text>
+                        )}
+                        {messageErrorDateNulo && (
+                            <Text style={styles.messageErrorCadastro}>Informe sua data de nascimento</Text>
+                        )}
+
+                        {errors.dataNasc && <Text style={styles.labelError}>{errors.dataNasc?.message}</Text>}
+
+                        <Text style={styles.textCamp}>Senha</Text>
+                        <Controller
+                            control={control}
+                            name="senha"
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <TextInput
+                                    secureTextEntry={true}
+                                    style={[styles.textInput,
+                                    {
+                                        borderWidth: errors.senha && 1,
+                                        borderColor: errors.senha && '#ff375b'
+                                    }]}
+                                    onChangeText={text => setSenha(text)}
+                                    onBlur={onBlur}
+                                    value={value}
+                                    placeholder=" Digite sua senha"
+                                />
+                            )}
+                        />
+                        {messageErrorSenhaNulo && (
+                            <Text style={styles.messageErrorCadastro}>Informe sua senha</Text>
+                        )}
+                        {messageErrorSenha && (
+                            <Text style={styles.messageErrorCadastro}>A senha deve ter pelo menos 6 digitos</Text>
+                        )}
+                        {errors.senha && <Text style={styles.labelError}>{errors.senha?.message}</Text>}
+
+                        <Text style={styles.textCamp}>Altura</Text>
+                        <Controller
+                            control={control}
+                            name="altura"
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <TextInput
+                                    style={[styles.textInput,
+                                    {
+                                        borderWidth: errors.altura && 1,
+                                        borderColor: errors.altura && '#ff375b'
+                                    }]}
+                                    onChangeText={text => setaltura(text)}
+                                    onBlur={onBlur}
+                                    value={value}
+                                    keyboardType="numbers-and-punctuation"
+                                    placeholder=" Digite sua altura"
+                                />
+                            )}
+                        />
+                        {messageErroralturaNulo && (
+                            <Text style={styles.messageErrorCadastro}>Informe sua altura</Text>
+                        )}
+                        {messageErroraltura && (
+                            <Text style={styles.messageErrorCadastro}>A altura deve ser no formato 1.75</Text>
+                        )}
+                        {errors.altura && <Text style={styles.labelError}>{errors.altura?.message}</Text>}
+
+                        <Text style={styles.textCamp}>Peso</Text>
+                        <Controller
+                            control={control}
+                            name="peso"
+                            render={({ field: { onChange, onBlur, value } }) => (
+                                <TextInput
+                                    style={[styles.textInput,
+                                    {
+                                        borderWidth: errors.peso && 1,
+                                        borderColor: errors.peso && '#ff375b'
+                                    }]}
+                                    onChangeText={text => setpeso(text)}
+                                    onBlur={onBlur}
+                                    value={value}
+                                    keyboardType="numbers-and-punctuation"
+                                    placeholder=" Digite seu peso"
+                                />
+                            )}
+                        />
+                        {messageErrorpesoNulo && (
+                            <Text style={styles.messageErrorCadastro}>Informe sua peso</Text>
+                        )}
+                        {messageErrorpeso && (
+                            <Text style={styles.messageErrorCadastro}>O peso deve ser no formato numerico</Text>
+                        )}
+                        {errors.peso && <Text style={styles.labelError}>{errors.peso?.message}</Text>}
+
+                    </View>
+                    <View style={styles.btnArea}>
+                        <TouchableOpacity style={styles.btnCadastro} onPress={salvar}>
+                            <Text style={styles.textbtncadastro}>Cadastrar</Text>
                         </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity
+                            style={styles.buttonregister}
+                            onPress={() => { navigationimc.navigate('Login') }}
+                        >
+                            <Text style={styles.registerText}>Já possui uma conta ? Entre</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                    </Animatable.View>
-                
+                </Animatable.View>
+
             </KeyboardAvoidingView>
         </ScrollView>
     )
@@ -361,7 +376,7 @@ const styles = StyleSheet.create({
     },
     buttonregister: {
         alignSelf: 'center',
-        marginTop:14,
+        marginTop: 14,
     },
     registerText: {
         fontWeight: 'bold',
@@ -373,11 +388,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#8bfaff',
         padding: 15,
     },
-    messageErrorCadastro:{
+    messageErrorCadastro: {
         fontSize: 15,
         color: 'red',
-        },
-    messageErrorLogin:{
+    },
+    messageErrorLogin: {
         fontSize: 14,
         fontWeight: 'bold',
         color: "black",
@@ -394,17 +409,17 @@ const styles = StyleSheet.create({
         color: '#1b065e',
         paddingTop: 10,
         fontWeight: 'bold',
-        paddingLeft:15
+        paddingLeft: 15
     },
     formArea: {
         backgroundColor: '#8bfaff',
-        alignItems:'center',
+        alignItems: 'center',
     },
     btnArea: {
         backgroundColor: '#8bfaff',
-        alignItems:'center',
-        justifyContent:'center',
-        padding:40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 40,
     },
     textInput: {
         width: '75%',
@@ -412,7 +427,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         borderRadius: 20,
         marginLeft: 15,
-        marginTop:15
+        marginTop: 15
     },
     btnCadastro: {
         width: 120,
@@ -433,8 +448,8 @@ const styles = StyleSheet.create({
         color: "#FFF",
     },
     labelError: {
-        alignSelf : 'center',
-        color : '#ff375b',
+        alignSelf: 'center',
+        color: '#ff375b',
         marginBottom: 8,
     },
 })

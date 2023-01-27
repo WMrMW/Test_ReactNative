@@ -6,7 +6,6 @@
 package ws;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import dao.Conexao;
 import dao.PesoDAO;
@@ -44,14 +43,14 @@ public class IMCWebServices {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
     public String getJson() {
         //TODO return proper representation object
         throw new UnsupportedOperationException();
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
     @Path("User/getUser/{id}")
     public String getUser(@PathParam("id") int id) throws SQLException, ClassNotFoundException {
         Gson g = new Gson();
@@ -65,7 +64,7 @@ public class IMCWebServices {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
     @Path("User/login/{email}/{senha}")
     public String getUser(@PathParam("email") String email, @PathParam("senha") String senha) throws SQLException, ClassNotFoundException {
         Gson g = new Gson();
@@ -80,7 +79,7 @@ public class IMCWebServices {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
     @Path("Peso/delete/{id}")
     public boolean deletePeso(@PathParam("id") int id) throws SQLException, ClassNotFoundException {
         Connection conexao = new Conexao().getConexao();
@@ -94,22 +93,22 @@ public class IMCWebServices {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("Peso/list")
-    public String listPesos() throws SQLException, ClassNotFoundException {
+    @Produces("application/json")
+    @Path("Peso/listPorId/{id}")
+    public String listPesos(@PathParam("id") int id) throws SQLException, ClassNotFoundException {
 
         Gson g = new Gson();
         List<Peso> pesos = new ArrayList<>();
         Connection conexao = new Conexao().getConexao();
         PesoDAO pesodao = new PesoDAO(conexao);
-        pesos = pesodao.selectAllPesos();
-        System.out.println("Busca de todos os pesos feita com sucesso!");
+        pesos = pesodao.selectAllPesosUser(id);
+        System.out.println("Busca de todos os pesos do usuario feita com sucesso!");
         conexao.close();
         return g.toJson(pesos);
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes("application/json")
     @Path("Peso/addPeso")
     public void addPeso(String pesoJson) throws SQLException, ClassNotFoundException {
 
@@ -126,9 +125,9 @@ public class IMCWebServices {
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes("application/json")
     @Path("User/addUser")
-    public void addUser(String userJson) throws SQLException, ClassNotFoundException {
+    public String addUser(String userJson) throws SQLException, ClassNotFoundException {
         Gson g = new Gson();
         User usuario = new User();
         Type userType = new TypeToken<User>() {
@@ -137,13 +136,13 @@ public class IMCWebServices {
         usuario.atualizaIMC();
         Connection conexao = new Conexao().getConexao();
         UserDAO userDao = new UserDAO(conexao);
-        userDao.insert(usuario);
-        System.out.println("Usuario foi inserido na tabela com sucesso!");
+        String msg = userDao.insert(usuario);
         conexao.close();
+        return g.toJson(msg);
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes("application/json")
     @Path("User/editAltura")
     public void editAlt(String userJson) throws SQLException, ClassNotFoundException {
 
@@ -155,13 +154,14 @@ public class IMCWebServices {
         usuario.atualizaIMC();
         Connection conexao = new Conexao().getConexao();
         UserDAO userDAO = new UserDAO(conexao);
+        System.out.println(usuario.getAltura());
         userDAO.updateAltura(usuario);
         System.out.println("Dados do usuario informado atualizado com sucesso!");
         conexao.close();
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes("application/json")
     @Path("User/editPeso")
     public void editPeso(String userJson) throws SQLException, ClassNotFoundException {
 
@@ -179,7 +179,7 @@ public class IMCWebServices {
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
     @Path("User/list")
     public String listUsers() throws SQLException, ClassNotFoundException {
 

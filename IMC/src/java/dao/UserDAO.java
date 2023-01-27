@@ -25,20 +25,29 @@ public class UserDAO {
         this.conexao = conexao;
     }
 
-    public void insert(User usuario) throws SQLException {
-        String sql = "insert into user(nome,email,senha,data_nasc,altura,peso,imc) values(?,?,?,?,?,?,?)";
-        PreparedStatement preparedStatement = conexao.prepareStatement(sql);
-        preparedStatement.setString(1, usuario.getNome());
-        preparedStatement.setString(2, usuario.getEmail());
-        preparedStatement.setString(3, usuario.getSenha());
-        preparedStatement.setString(4, usuario.getData_Nasc());
-        preparedStatement.setFloat(5, usuario.getAltura());
-        preparedStatement.setFloat(6, usuario.getPeso());
-        preparedStatement.setFloat(7, usuario.getImc());
-        preparedStatement.execute();
-        User user_new = getUserPorEmaileSenha(usuario);
-        PesoDAO pesodao = new PesoDAO(conexao);
-        pesodao.insertSemAtualizarUser(new Peso(usuario.getPeso(), user_new.getId()));
+    public String insert(User usuario) throws SQLException {
+        boolean flag = true;
+        User userAlvo = getUserPorEmaileSenha(usuario);
+        if(userAlvo != null){
+            flag = false;
+        }
+        if(flag){
+            String sql = "insert into user(nome,email,senha,data_nasc,altura,peso,imc) values(?,?,?,?,?,?,?)";
+            PreparedStatement preparedStatement = conexao.prepareStatement(sql);
+            preparedStatement.setString(1, usuario.getNome());
+            preparedStatement.setString(2, usuario.getEmail());
+            preparedStatement.setString(3, usuario.getSenha());
+            preparedStatement.setString(4, usuario.getData_Nasc());
+            preparedStatement.setFloat(5, usuario.getAltura());
+            preparedStatement.setFloat(6, usuario.getPeso());
+            preparedStatement.setFloat(7, usuario.getImc());
+            preparedStatement.execute();
+            User user_new = getUserPorEmaileSenha(usuario);
+            PesoDAO pesodao = new PesoDAO(conexao);
+            pesodao.insertSemAtualizarUser(new Peso(usuario.getPeso(), user_new.getId()));
+            return "Usuário cadastrado com sucesso!";
+        }
+        return "Erro! Usuário com o email ja cadastrado no sistema!";
     }
 
     public User getUserPorEmaileSenha(User usuario) throws SQLException {
@@ -73,23 +82,23 @@ public class UserDAO {
     public ArrayList<User> selectAllUsers() throws SQLException {
         String sql = "select * from user";
         PreparedStatement preparedStatement = conexao.prepareStatement(sql);
-        
+
         ArrayList<User> usuarios = new ArrayList<>();
         preparedStatement.execute();
         ResultSet resultSet = preparedStatement.getResultSet();
-        while(resultSet.next()){
-             usuarios.add(new User(resultSet.getInt("id"), resultSet.getString("nome"), resultSet.getString("email"), resultSet.getString("senha"), resultSet.getString("data_nasc"), resultSet.getFloat("altura"), resultSet.getFloat("peso"), resultSet.getFloat("imc")));
+        while (resultSet.next()) {
+            usuarios.add(new User(resultSet.getInt("id"), resultSet.getString("nome"), resultSet.getString("email"), resultSet.getString("senha"), resultSet.getString("data_nasc"), resultSet.getFloat("altura"), resultSet.getFloat("peso"), resultSet.getFloat("imc")));
         }
         return usuarios;
     }
-    
-    public User getUserPorId(int id) throws SQLException{
+
+    public User getUserPorId(int id) throws SQLException {
         String sql = "select * from user where id = ?";
         PreparedStatement preparedStatement = conexao.prepareStatement(sql);
         preparedStatement.setInt(1, id);
         preparedStatement.execute();
         ResultSet resultSet = preparedStatement.getResultSet();
-        if(resultSet.next()){
+        if (resultSet.next()) {
             return new User(resultSet.getInt("id"), resultSet.getString("nome"), resultSet.getString("email"), resultSet.getString("senha"), resultSet.getString("data_nasc"), resultSet.getFloat("altura"), resultSet.getFloat("peso"), resultSet.getFloat("imc"));
         }
         return null;

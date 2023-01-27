@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import model.Peso;
 import model.User;
 
@@ -54,7 +55,20 @@ public class PesoDAO {
         preparedStatement.execute();
         ResultSet resultSet = preparedStatement.getResultSet();
         while (resultSet.next()) {
-            pesos.add(new Peso(resultSet.getInt("id"),resultSet.getFloat("valor"), resultSet.getInt("user_id")));
+            pesos.add(new Peso(resultSet.getInt("id"), resultSet.getFloat("valor"), resultSet.getInt("user_id")));
+        }
+        return pesos;
+    }
+
+    public List<Peso> selectAllPesosUser(int id) throws SQLException {
+        String sql = "select * from peso where user_id = ?";
+        PreparedStatement preparedStatement = conexao.prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        preparedStatement.execute();
+        ArrayList<Peso> pesos = new ArrayList<>();
+        ResultSet resultSet = preparedStatement.getResultSet();
+        while (resultSet.next()) {
+            pesos.add(new Peso(resultSet.getInt("id"), resultSet.getFloat("valor"), resultSet.getInt("user_id")));
         }
         return pesos;
     }

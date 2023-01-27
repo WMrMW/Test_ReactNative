@@ -2,22 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Text, TextInput, View, StyleSheet, TouchableOpacity, Keyboard, ScrollView } from "react-native";
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import config from '../../../config/config.json';
+import LocalHost from "../../../LocalHost";
 
 function Lista(props) {
 
     async function deleteItem(id) {
-        let userDados = await AsyncStorage.getItem('userData');
-        userDados = JSON.parse(userDados);
-        await fetch(`${config.urlRoot}delete`, {
-            method: 'POST',
+        const response = await fetch(`http://${LocalHost.address}:${LocalHost.port}/IMC/webresources/generic/Peso/delete/${id}`, {
+            method: 'GET',
             headers: {
                 Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id: id
-            })
+                'Content-Type': 'application/json',
+            }
         });
         props.att();
         return;
@@ -43,22 +38,19 @@ export default function Form() {
         async function getAltura() {
             let userDados = await AsyncStorage.getItem('userData');
             userDados = JSON.parse(userDados);
-            const reqs = await fetch(`${config.urlRoot}getUser`, {
-                method: 'POST',
+            const response = await fetch(`http://${LocalHost.address}:${LocalHost.port}/IMC/webresources/generic/User/getUser/${userDados.id}`, {
+                method: 'GET',
                 headers: {
                     Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    id: userDados.id
-                })
+                    'Content-Type': 'application/json',
+                }
             });
-            let json = await reqs.json();
+            let json = await response.json();
             if (json.altura !== null) {
                 setAltura(json.altura)
                 setPeso(json.peso);
                 setAlturaText(json.altura);
-                getItems().then((itens)=>{setItems(itens)});
+                getItems().then((itens) => { setItems(itens) });
             }
         }
         getAltura();
@@ -77,17 +69,16 @@ export default function Form() {
     async function getItems() {
         let userDados = await AsyncStorage.getItem('userData');
         userDados = JSON.parse(userDados);
-        const reqs = await fetch(`${config.urlRoot}getPesos`, {
-            method: 'POST',
+        const responsePes = await fetch(`http://${LocalHost.address}:${LocalHost.port}/IMC/webresources/generic/Peso/listPorId/${userDados.id}`, {
+            method: 'GET',
             headers: {
                 Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                id: userDados.id
-            })
+                'Content-Type': 'application/json',
+            }
         });
-        const pesos = await reqs.json();
+        let json = await responsePes.json();
+        json = JSON.stringify(json);
+        const pesos = JSON.parse(json);
         return pesos;
     }
 
@@ -96,9 +87,7 @@ export default function Form() {
         async function saveAltura() {
             let userDados = await AsyncStorage.getItem('userData');
             userDados = JSON.parse(userDados);
-            console.log("Id do asuncStorage : "+userDados.id);
-            const imc = peso / (altura * altura);
-            await fetch(`${config.urlRoot}editAlt`, {
+            const responsePes = await fetch(`http://${LocalHost.address}:${LocalHost.port}/IMC/webresources/generic/User/editAltura`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -106,14 +95,16 @@ export default function Form() {
                 },
                 body: JSON.stringify({
                     id: userDados.id,
+                    nome: userDados.nome,
+                    email: userDados.email,
+                    senha: userDados.senha,
+                    data_Nasc: userDados.dataNasc,
                     altura: altura_v,
-                    imc: imc
+                    peso: peso
                 })
             });
-            console.log("Passou do fetch edit altura");
         }
         if (altura_v !== null) {
-            console.log("Chamada das consultas do edit altura");
             saveAltura();
         }
     }, [altura_v]);
@@ -122,49 +113,30 @@ export default function Form() {
 
     useEffect(() => {
 
-        async function savePeso() {
-            let userDados = await AsyncStorage.getItem('userData');
-            userDados = JSON.parse(userDados);
-            console.log("Id do asuncStorage : "+userDados.id);
-            const imc = peso / (altura * altura);
-            await fetch(`${config.urlRoot}editPeso`, {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    id: userDados.id,
-                    peso: peso,
-                    imc: imc
-                })
-            });
-            console.log("Passou do fetch peso"); 
-        }
-
         async function addPeso() {
 
             let userDados = await AsyncStorage.getItem('userData');
             userDados = JSON.parse(userDados);
-            await fetch(`${config.urlRoot}addPeso`, {
+            const responsePes = await fetch(`http://${LocalHost.address}:${LocalHost.port}/IMC/webresources/generic/Peso/addPeso`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    valor: peso,
-                    userId: userDados.id,
+                    valor: new_peso,
+                    user_id: userDados.id
                 })
             });
+
+            const itens = await getItems();
+            setItems(itens);
         }
 
         if (new_peso !== null) {
-            console.log("Chamada Das consultas de edit peso");
-            savePeso();
             addPeso();
         }
-        
+
     }, [new_peso])
 
 
@@ -215,6 +187,7 @@ export default function Form() {
         }
     }
 
+
     return (
         <View style={styles.formContext} behavior="position" enabled>
             <View style={styles.boxTitle}>
@@ -251,7 +224,6 @@ export default function Form() {
                         style={styles.btnPeso}
                         onPress={() => {
                             adicionaPeso();
-                            getItems().then((itens)=>{setItems(itens)});
                         }}
                     >
                         <Text style={styles.textButtonCalcu}>Adicionar</Text>
@@ -263,7 +235,7 @@ export default function Form() {
                     style={styles.scrollContainer}
                     contentContainerStyle={styles.itemsContainer}>
                     {items.length > 0 ? items.map((item) => {
-                        return <Lista key={item.id} id={item.id} item={item.valor} att={()=> {getItems().then((itens)=>{setItems(itens)})}} />
+                        return <Lista key={item.id} id={item.id} item={item.valor} att={() => { getItems().then((itens) => { setItems(itens) }) }} />
                     }) : ''}
                 </ScrollView>
             </View>
